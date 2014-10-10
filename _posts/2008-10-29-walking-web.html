@@ -1,0 +1,164 @@
+---
+layout: post
+title: Walking the Web
+date: '2008-10-29T20:29:00.004Z'
+author: AndyS
+tags: 
+modified_time: '2008-10-29T20:33:25.619Z'
+blogger_id: tag:blogger.com,1999:blog-18002060.post-621648220385793980
+blogger_orig_url: http://seaborne.blogspot.com/2008/10/walking-web.html
+---
+
+It's nice to see Freebase providing an RDF interface:&nbsp; <a href="http://rdf.freebase.com/">http://rdf.freebase.com/. </a>
+The example they give is &lt;<a href="http://rdf.freebase.com/ns/en.blade_runner">http://rdf.freebase.com/ns/en.blade_runner</a>&gt; 
+so let's see what is actually there and how we might use the information. 
+<p>
+Each graph describing something contains Freebase URLs to be explored.&nbsp; What we want is the ability to load data into our local store while 
+some query 
+is running, enabling the dataset to be enlarged as the query makes choices about 
+how to proceed.</p>
+<p>
+This is similar to <a href="http://www.w3.org/2000/10/swap/doc/Processing">cwm</a>'s log:semantics.
+<a href="http://www.w3.org/2000/10/swap/doc/Reach">
+http://ww.w3.org/2000/10/swap/doc/Reach</a></p>
+<p>In <a href="http://www.w3.org/TR/rdf-sparql-query/">SPARQL</a>, the dataset 
+is fixed. No good if you want to write a graph-walking process without some glue 
+in your favourite programming language. In one way, it's scripting for the web 
+but in a special way.&nbsp; It's not a sequence of queries and updates; it's changing the collection of graphs, expanding the
+<a href="http://www.w3.org/TR/rdf-sparql-query/#rdfDataset">RDF dataset</a> 
+known to the application.</p>
+<p>Query 1 : See what's in the graph</p>
+<p>Let's first look at what's available at the example URL.&nbsp; That does not 
+require anything special: it's just a FROM clause (which in ARQ will 
+content-negotiate for RDF; if you use a web browser you will see an HTML page):</p>
+<pre class="box">PREFIX fb: &lt;http://rdf.freebase.com/ns/&gt;
+SELECT *
+FROM fb:en.blade_runner
+{ ?s ?p ?o }</pre>
+<p>Hmm - 294 triples.</p>
+<p>Query 2 : Look for interesting properties</p>
+<pre class="box">PREFIX fb: &lt;http://rdf.freebase.com/ns/&gt;
+SELECT DISTINCT ?p
+FROM fb:en.blade_runner
+{
+  ?s ?p ?o
+}</pre>
+<p>62 distinct properties used.&nbsp; fb:film.film.starring looks interesting.</p>
+<p>Query 3 : Follow the links</p>
+<p>As an experimental feature, consider a new SPARQL keyword &quot;<code>FETCH</code>&quot; which takes a URL, or 
+a variable bound to a URL by the time that part of the query is reached, and 
+fetches the graph at that location.</p>
+<p>Now we fetch the documents at each of the URLs that are objects of the <i>
+blade runner, film.film.starring</i> triples.</p>
+<p><code>FETCH</code> loads the graph and places it in the dataset as a named graph, the name 
+being the URL is fetched it from. We use <code>GRAPH</code> to access the loaded graph. Done 
+this way, triples from different sources are kept separately which might be 
+important in deciding what sources to believe.</p>
+<p>This also shows a critical limitation: just placing in a named graph is a 
+basic requirement for deciding what to believe but really there ought to be a 
+lot more metadata about the graph, including when it was read, possibly why it 
+was read (how we got here in the query) etc etc. But we are not an agent system 
+so we will note this and move on.</p>
+<p>By poking around with <code>GRAPH ?personUUID { ?s ?p ?o}</code> (60 triples) the property film.performance.actor looks hopeful.</p>
+<pre class="box">PREFIX fb: &lt;http://rdf.freebase.com/ns/&gt;
+SELECT ?actor
+FROM fb:en.blade_runner
+{
+  fb:en.blade_runner fb:film.film.starring ?personUUID
+  FETCH ?personUUID
+  GRAPH ?personUUID
+    { ?personUUID fb:film.performance.actor ?actor }
+}</pre>
+<p>12 results.</p>
+<pre class="box">--------------------------------------------
+| actor                                    |
+============================================
+| fb:en.james_hong                         |
+| fb:en.brion_james                        |
+| fb:en.edward_james_olmos                 |
+| fb:en.joanna_cassidy                     |
+| fb:en.william_sanderson                  |
+| fb:en.rutger_hauer                       |
+| fb:authority.netflix.role.20000077       |
+| fb:guid.9202a8c04000641f80000000054cbccc |
+| fb:en.sean_young                         |
+| fb:en.joe_turkel                         |
+| fb:en.harrison_ford                      |
+| fb:en.daryl_hannah                       |
+--------------------------------------------</pre>
+<p>and more URLs to follow.</p>
+<p>Looking in the next graph, there is <code>fb:type.object.name</code> so let's 
+guess and use that.&nbsp; But each time we have chosen a property, we didn't 
+have to guess, we can follow that property URL itself:</p>
+<pre class="box">PREFIX fb: &lt;http://rdf.freebase.com/ns/&gt;
+SELECT *
+FROM <b>fb:type.object.name</b>
+{
+  ?s ?p ?o
+}</pre>
+<p>but it's easier to <a href="http://rdf.freebase.com/ns/type.object.name">read 
+the description in HTML</a> (and freebase is link following internally to build 
+the page).</p>
+<p>Query 3 : The names of actors in <i>Blade Runner</i></p>
+<p>So a query to find the names of actors in &quot;Blade Runner&quot; is:</p>
+<pre class="box">PREFIX fb: &lt;http://rdf.freebase.com/ns/&gt;
+SELECT ?actor ?name
+FROM fb:en.blade_runner
+{
+  fb:en.blade_runner fb:film.film.starring ?personUUID
+  FETCH ?personUUID
+  GRAPH ?personUUID
+    { ?personUUID fb:film.performance.actor ?actor }
+  FETCH ?actor
+  GRAPH ?actor
+    { ?actor fb:type.object.name ?name }
+}
+ORDER BY ?actor</pre>
+<p>which gives:</p>
+<pre class="box">
+-------------------------------------------------------------------
+| actor                                    | name                 |
+===================================================================
+| fb:authority.netflix.role.20000077       | "M. Emmet Walsh"     |
+| fb:authority.netflix.role.20000077       | "M&#12539;&#12456;&#12513;&#12483;&#12488;&#12539;&#12454;&#12457;&#12523;&#12471;&#12517;"    |
+| fb:en.brion_james                        | "Brion James"        |
+| fb:en.daryl_hannah                       | "Daryl Hannah"       |
+| fb:en.daryl_hannah                       | "&#1061;&#1072;&#1085;&#1085;&#1072;, &#1044;&#1101;&#1088;&#1080;&#1083;"       |
+| fb:en.daryl_hannah                       | "&#1491;&#1512;&#1497;&#1500; &#1492;&#1488;&#1504;&#1492;"          |
+| fb:en.daryl_hannah                       | "&#12480;&#12522;&#12523;&#12539;&#12495;&#12531;&#12490;"         |
+| fb:en.edward_james_olmos                 | "Edward James Olmos" |
+| fb:en.harrison_ford                      | "Harrison Ford"      |
+| fb:en.harrison_ford                      | "&#1060;&#1086;&#1088;&#1076; &#1043;&#1072;&#1088;&#1088;&#1110;&#1089;&#1086;&#1085;"      |
+| fb:en.harrison_ford                      | "&#1060;&#1086;&#1088;&#1076;, &#1061;&#1072;&#1088;&#1088;&#1080;&#1089;&#1086;&#1085;"     |
+| fb:en.harrison_ford                      | "&#1061;&#1072;&#1088;&#1080;&#1089;&#1086;&#1085; &#1060;&#1086;&#1088;&#1076;"       |
+| fb:en.harrison_ford                      | "&#1061;&#1072;&#1088;&#1080;&#1089;&#1098;&#1085; &#1060;&#1086;&#1088;&#1076;"       |
+| fb:en.harrison_ford                      | "&#1492;&#1488;&#1512;&#1497;&#1505;&#1493;&#1503; &#1508;&#1493;&#1512;&#1491;"       |
+| fb:en.harrison_ford                      | "&#12495;&#12522;&#12477;&#12531;&#12539;&#12501;&#12457;&#12540;&#12489;"       |
+| fb:en.harrison_ford                      | "&#21704;&#37324;&#26862;·&#31119;&#29305;"         |
+| fb:en.harrison_ford                      | "&#54644;&#47532;&#49832; &#54252;&#46300;"          |
+| fb:en.james_hong                         | "James Hong"         |
+| fb:en.joanna_cassidy                     | "Joanna Cassidy"     |
+| fb:en.joe_turkel                         | "Joe Turkel"         |
+| fb:en.rutger_hauer                       | "Rutger Hauer"       |
+| fb:en.rutger_hauer                       | "&#1061;&#1072;&#1091;&#1101;&#1088;, &#1056;&#1091;&#1090;&#1075;&#1077;&#1088;"      |
+| fb:en.rutger_hauer                       | "&#12523;&#12488;&#12460;&#12540;&#12539;&#12495;&#12454;&#12450;&#12540;"      |
+| fb:en.rutger_hauer                       | "&#39791;&#26684;·&#35946;&#29246;"           |
+| fb:en.sean_young                         | "Sean Young"         |
+| fb:en.sean_young                         | "&#1064;&#1086;&#1085; &#1049;&#1098;&#1085;&#1075;"           |
+| fb:en.sean_young                         | "&#1071;&#1085;&#1075;, &#1064;&#1086;&#1085;"           |
+| fb:en.sean_young                         | "&#12471;&#12519;&#12540;&#12531;&#12539;&#12516;&#12531;&#12464;"        |
+| fb:en.william_sanderson                  | "William Sanderson"  |
+| fb:guid.9202a8c04000641f80000000054cbccc | "Morgan Paull"       |
+-------------------------------------------------------------------</pre>
+
+<p>
+&nbsp;</p>
+<p>
+We are left with a question: why use (extended) SPARQL? If you're doing it once, 
+then a web browser is easier. After all, I used one to choose the properties to 
+follow.</p>
+<p>
+But with a query you can send it to someone else for them to reuse your 
+knowledge, you can rerun it to look for changes, you can generalise and let the 
+computer do some brute force search to find things that would take you, the 
+human, a long time.</p>

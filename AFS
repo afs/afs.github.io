@@ -1,2 +1,19 @@
 keep Jekly up-to-date:
 "bundle update"
+
+
+    <li>
+      <a href="{{ post.url }}">{{ post.title }}</a>
+      {{ post.excerpt }}
+    </li>
+
+for a excerpt in the Blog page.
+
+* Import blogger
+
+ruby -rubygems -e 'require "jekyll-import";
+    JekyllImport::Importers::Blogger.run({
+      "source"                => "/home/afs/Desktop/blog-10-10-2014.xml",
+      "no-blogger-info"       => false, # not to leave blogger-URL info (id and old URL) in the front matter
+      "replace-internal-link" => false, # replace internal links using the post_url liquid tag.
+    })'
