@@ -3,9 +3,7 @@ layout: doc
 title: Apache Jena implementation of RDF Binary
 ---
 
-RDF Thrift has been incorporated in to apache Jena (as of 2014-08-31).
-
-A version of Jena built after that date is required (Jena 2.12.1-SNAPSHOT or later).
+RDF Thrift has been incorporated into [Apache Jena](http://jena.apache.org/), from version 2.12.1.
 
 ## Comand line 
 

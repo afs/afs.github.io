@@ -38,4 +38,4 @@ encoding layer - this is not used here.)
 * Known implementations: 
   * Apache Jena: [Jena API to RDF Trift](jena-rdf-thrift-api.html).
 
-Code and document license: [Apache License](LICENSE.txt) .
+Document license: [Apache License](LICENSE.txt) .
