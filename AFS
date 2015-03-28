@@ -1,5 +1,18 @@
-keep Jekly up-to-date:
+jekyl 
+
+
+
+Keep Jekyll up-to-date:
 "bundle update"
+
+Jekyll 2:
+  For jekyll-coffeescript (required)
+sudo gem install execjs
+
+sudo gem install therubyracer
+
+or instead of therubyracer
+  sudo apt-get install nodejs
 
 
     <li>
