@@ -1,5 +1,6 @@
 "jekyll build"
 
+"jekyll server" -> localhost:4000
 
 
 Keep Jekyll up-to-date:

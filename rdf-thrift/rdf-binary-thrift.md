@@ -123,7 +123,7 @@ and when read, will result in the same RDF term (`"1"^^xsd:integer`
 is the XSD canonical form).
 
 Some derived dataypes are lost - `xsd:long`, `xsd:int`, `xsd:short`,
-`xsd:byte` are encoded as their integer value and wil become `xsd:integer`
+`xsd:byte` are encoded as their integer value and will become `xsd:integer`
 when read back in.
 
 | Input Datatype        | Value space | Outcome Datatype        |
