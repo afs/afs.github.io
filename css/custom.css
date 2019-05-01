@@ -25,9 +25,26 @@ h1 { font-size: 32px ; font-weight: bold ; }
 h2 { font-size: 24px ; font-weight: bold ; }
 h3 { font-size: 18px ; font-weight: bold ; }
 
-code { font-family: "Inconsolata" ; color: black ; background-color: #F0F0F0 ; }
-pre { font-family: "Inconsolata" ; }
+tt   { font-family: "Inconsolata" ; color: black ; }
+code { font-family: "Inconsolata" ; color: black ; }
+pre  { font-family: "Inconsolata" ; color: black ;  background-color: #F0F0F0 ; }
+
 blockquote { font-size: 14px ; color: #888 ; font-style: italic ; }
+
+.defn {
+  margin-left :     5% ;
+  margin-right :    5% ;
+  border:           solid ;
+  border-color:     #808080 ;
+  border-width:     thin; 
+  padding:          2mm;
+  page-break-inside: avoid ;
+}
+
+.indent {
+  margin-left :     5% ;
+  margin-right :    5% ;
+}
 
 table tr td,th {
   vertical-align: top;
