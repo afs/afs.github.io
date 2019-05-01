@@ -243,12 +243,10 @@ F(v) = v1 where v is a variable mentioned in the project expression,
        but not in PV, and v1 is a fresh variable<br/>
 F(v) = v otherwise.
 </p>
-<p>
 Define the <dfn>Projection Expression Variable Remapping</dfn> <tt>PrjMap(P,PV)</tt> to
 be the algebra expression P (and the subtree over which the projection is
 defined) with F applied to every variable of the algebra expression P over
 which P is evaluated.
-</p>
 </div>
  
 This process is applied throughout the graph pattern of <tt>EXISTS</tt>:
@@ -264,7 +262,6 @@ PrjMap(X) = replace all project operations <tt>project(P PV)</tt> with <tt>proje
 </p>
 This replacement is applied bottom-up when there are multiple project
 operations in the graph pattern of <tt>EXISTS</tt>.
-</div>
 </div>
 
 Applying the renaming steps inside a sub-query does not change the solution

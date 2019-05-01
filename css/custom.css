@@ -32,8 +32,10 @@ pre  { font-family: "Inconsolata" ; color: black ;  background-color: #F0F0F0 ; 
 blockquote { font-size: 14px ; color: #888 ; font-style: italic ; }
 
 .defn {
-  margin-left :     5% ;
-  margin-right :    5% ;
+  margin-left :     2em ;
+  margin-right :    10% ;
+  margin-top :      10px ;
+  margin-bottom :   10px ;
   border:           solid ;
   border-color:     #808080 ;
   border-width:     thin; 
@@ -43,7 +45,6 @@ blockquote { font-size: 14px ; color: #888 ; font-style: italic ; }
 
 .indent {
   margin-left :     5% ;
-  margin-right :    5% ;
 }
 
 table tr td,th {
