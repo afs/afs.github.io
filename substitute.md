@@ -14,6 +14,12 @@ an improved substution process that addresses those problems based on the concep
 <a href="https://en.wikipedia.org/wiki/Correlated_subquery">Correlated Subquery</a>
 found in SQL.
 
+## Overview of Solution
+
+Instead of replacing a variable by a value, the evaluation of the expression is
+performed with a binding of the variable to the intended value, thereby leaving
+the variable in the query pattern.
+
 ## Identified Issues
 
 This section describes the issues identified on the 
@@ -25,7 +31,6 @@ SPARQL Exists Community group mailing list
 1. Blank nodes substituted into BGPs act as variables
 1. Substitution can flip MINUS to its disjoint-domain case
 1. Substitution affects disconnected variables
-
 
 ### Issue 1: Some uses of EXISTS are not defined during evaluation
 
@@ -139,12 +144,15 @@ In
 the substitution from 18.6 ends up producing
 
       Join ( Extend( BGP(), ?z :e ),
-             ToMultiSet( Project( ToList( BGP( :d :p :c ) ), { ?y } ) ) )
+             ToMultiSet( 
+                 Project( ToList( BGP( :d :p :c ) ), { ?y } )
+           ))
 
-Some, but not all, implementations diverge from the spec here.
+The `?x` inside the `SELECT ?y` is not projected out so it is a "different" `?x`
+than the outer one - changing it to another other unused name in the same query
+would not normally affect the query results.
     
 ## An Improved "substitute" Operation
-
 
 All filtering in SPARQL is determining whether a solution mapping passes some
 condition. We call this solution mapping the <dfn>current row</dfn> in this
