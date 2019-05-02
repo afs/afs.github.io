@@ -3,6 +3,8 @@ layout: doc
 title: Improving SPARQL "EXISTS"
 ---
 
+
+
 The SPARQL algebra operation
 "<a href="https://www.w3.org/TR/sparql11-query/#defn_substitute">substitute</a>"
 replaces occurrences of variables by values as given by a solution mapping. The
@@ -14,13 +16,20 @@ an improved substution process that addresses those problems based on the concep
 <a href="https://en.wikipedia.org/wiki/Correlated_subquery">Correlated Subquery</a>
 found in SQL.
 
-## Overview of Solution
+* [Summary](#summary)
+* [Identified Issues](#issues)
+* [An Improved "substitute" Operation](#substitute-ng)
+* [Addressing Issues](#fixing)
+* [Notes](#notes)
 
-Instead of replacing a variable by a value, the evaluation of the expression is
-performed with a binding of the variable to the intended value, thereby leaving
-the variable in the query pattern.
+## Summary {#summary}
 
-## Identified Issues
+The fundamental problem is that variable can not be simply replaces by a value
+(an RDF Term). So instead of replacing a variable by a value, the evaluation of
+the substitue operation is performed with a binding of the variable to the
+intended value, thereby leaving the variable in the query pattern.
+
+## Identified Issues {#issues}
 
 This section describes the issues identified on the 
 SPARQL Exists Community group mailing list 
@@ -152,7 +161,7 @@ The `?x` inside the `SELECT ?y` is not projected out so it is a "different" `?x`
 than the outer one - changing it to another other unused name in the same query
 would not normally affect the query results.
     
-## An Improved "substitute" Operation
+## An Improved "substitute" Operation {#substitute-ng}
 
 All filtering in SPARQL is determining whether a solution mapping passes some
 condition. We call this solution mapping the <dfn>current row</dfn> in this
@@ -359,7 +368,7 @@ define the <dfn>Evaluation of Exists</dfn> <tt>exists(X)</tt>
 </p>
 </div>
 
-## Solutions
+## Addressing Issues {#fixing}
 
 This section addresses each issue identified, given the proposal above.
       
@@ -413,7 +422,7 @@ projected can be renamed without affecting the sub-query results. Whether to
 preserve that invariant or allow the variables to be set by the current row is a
 choice point - this design preserves the independence of disconnected variables.
 
-### Notes
+## Notes {#notes}
 
 The proposal described in this document does not cover use of variables from
 the current row in a <tt>HAVING</tt> clause.
