@@ -27,7 +27,13 @@ h3 { font-size: 18px ; font-weight: bold ; }
 
 tt   { font-family: "Inconsolata" ; color: black ; }
 code { font-family: "Inconsolata" ; color: black ; }
-pre  { font-family: "Inconsolata" ; color: black ;  background-color: #F0F0F0 ; }
+pre  {
+    font-family: "Inconsolata" ;
+    color: black ;
+    background-color: #F0F0F0 ;
+    margin-left :     2em ;
+    margin-right :    10% ;
+  }
 
 blockquote { font-size: 14px ; color: #888 ; font-style: italic ; }
 
