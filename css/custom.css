@@ -21,7 +21,7 @@ body { font-family: "Roboto", sans-serif ;
 
 a { color : #0000C0 ; }
 
-h1 { font-size: 32px ; font-weight: bold ; }
+h1 { font-size: 36px ; font-weight: bold ; }
 h2 { font-size: 24px ; font-weight: bold ; }
 h3 { font-size: 18px ; font-weight: bold ; }
 
@@ -36,6 +36,11 @@ pre  {
   }
 
 blockquote { font-size: 14px ; color: #888 ; font-style: italic ; }
+
+.docinfo {
+    margin-bottom :   40px;
+    margin-left :     10% ;
+}
 
 .page-header {
   border-bottom: none;
