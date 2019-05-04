@@ -2,8 +2,9 @@
 layout: doc
 title: Improving SPARQL "EXISTS"
 ---
-
-
+<div class="docinfo">
+     <p>Andy Seaborne</p>
+</div>
 
 The SPARQL algebra operation
 "<a href="https://www.w3.org/TR/sparql11-query/#defn_substitute">substitute</a>"
@@ -35,13 +36,13 @@ This section describes the issues identified on the
 SPARQL Exists Community group mailing list 
 <a href="https://lists.w3.org/Archives/Public/public-sparql-exists/2016Jul/0014.html">public-sparql-exists/2016Jul/0014</a>.
 
-1. Some uses of EXISTS are not defined during evaluation
-1. Substitution happens where definitions are only for variables
-1. Blank nodes substituted into BGPs act as variables
-1. Substitution can flip MINUS to its disjoint-domain case
-1. Substitution affects disconnected variables
+* [Issue-1](#issue-1): Some uses of EXISTS are not defined during evaluation.
+* [Issue-2](#issue-2): Substitution happens where definitions are only for variables.
+* [Issue-3](#issue-3): Blank nodes substituted into BGPs act as variables.
+* [Issue-4](#issue-4): Substitution can flip MINUS to its disjoint-domain case.
+* [Issue-5](#issue-5): Substitution affects disconnected variables.
 
-### Issue 1: Some uses of EXISTS are not defined during evaluation
+### Issue 1: Some uses of EXISTS are not defined during evaluation {#issue-1}
 
 The evaluation process in the specificiation is defined for graph patterns but
 there are situations where the evaluation is of an alegbra form not listed.
@@ -65,7 +66,7 @@ containing just a
 or just 
 <a href="https://www.w3.org/TR/sparql11-query/#inline-data">InlineData</a>.
 
-### Issue 2: Substitution happens where definitions are only for variables
+### Issue 2: Substitution happens where definitions are only for variables {#issue-2}
 
 There are places in the SPARQL syntax and algebra where
 variables are allowed but not RDF terms (constant values).<p>
@@ -86,7 +87,7 @@ In the algebra, this affects
   (related to the use of <tt>VALUES</tt>)
 * <a href="https://www.w3.org/TR/sparql11-query/#func-bound"><tt>BOUND</tt></a>
 
-### Issue 3: Blank nodes substituted into BGPs act as variables
+### Issue 3: Blank nodes substituted into BGPs act as variables {#issue-3}
 
 In the 
 <a href="https://www.w3.org/TR/sparql11-query/#BasicGraphPattern">evaluation of basic graph patterns</a> 
@@ -122,7 +123,7 @@ matches against <tt>:e :q :b</tt> because the <tt>_:c</tt> can be mapped to <tt>
 the RDF instance mapping that is part of pattern instance mappings in 
 <a href="https://www.w3.org/TR/sparql11-query/#BGPsparql">18.3.1</a>.
 
-### Issue 4: Substitution can flip MINUS to its disjoint-domain case
+### Issue 4: Substitution can flip MINUS to its disjoint-domain case {#issue-4}
 
 In
 
@@ -140,7 +141,7 @@ which produces a non-empty result because the two solution mappings for the
 Minus have disjoint domains and 18.5 dictates that then the result is not
 empty.
 
-### Issue 5: Substitution affects disconnected variables
+### Issue 5: Substitution affects disconnected variables {#issue-5}
 
 In
 
