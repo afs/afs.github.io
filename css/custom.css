@@ -37,6 +37,10 @@ pre  {
 
 blockquote { font-size: 14px ; color: #888 ; font-style: italic ; }
 
+.page-header {
+  border-bottom: none;
+}
+
 .defn {
   margin-left :     2em ;
   margin-right :    10% ;
