@@ -38,7 +38,8 @@ pre  {
 blockquote { font-size: 14px ; color: #888 ; font-style: italic ; }
 
 .docinfo {
-    margin-bottom :   40px;
+    margin-bottom :   30px;
+    margin-top :      -10px;
     margin-left :     10% ;
 }
 
@@ -80,4 +81,11 @@ table th {
   padding-left: 0.5em ;
   padding-right: 0.5em ;
   background-color: #ededee;
+}
+
+/* Don't print link hrefs */
+@media print {
+  a[href]:after {
+    content: none
+  }
 }

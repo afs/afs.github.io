@@ -6,35 +6,38 @@ title: Improving SPARQL "EXISTS"
      <p>Andy Seaborne</p>
 </div>
 
-The SPARQL algebra operation
-"<a href="https://www.w3.org/TR/sparql11-query/#defn_substitute">substitute</a>"
-replaces occurrences of variables by values as given by a solution mapping. The
-operation is used to filter the current row as part of the <tt>EXISTS</tt>
-and <tt>NOT EXISTS</tt> operations.
+The SPARQL 1.1 algebra operation
+"[substitute](https://www.w3.org/TR/sparql11-query/#defn_substitute)" evaluates
+a graph pattern where there is a specific are variables given by a solution
+mapping. The operation is used to in the evaluation of <tt>EXISTS</tt> and
+<tt>NOT EXISTS</tt> operations.
 
-This document identifies problems with <tt>substitute</tt> and describes 
-an improved substution process that addresses those problems based on the concept of 
-<a href="https://en.wikipedia.org/wiki/Correlated_subquery">Correlated Subquery</a>
-found in SQL.
+
+This document list problems that have been identified with the
+<tt>substitute</tt> operation and proposes an improved substitution evalaution
+process that addresses these problems based on the concept of 
+[Correlated Subquery](https://en.wikipedia.org/wiki/Correlated_subquery) found in SQL.
 
 * [Summary](#summary)
 * [Identified Issues](#issues)
 * [An Improved "substitute" Operation](#substitute-ng)
-* [Addressing Issues](#fixing)
+* [Addressing Issues](#addressing-issues)
 * [Notes](#notes)
 
 ## Summary {#summary}
 
-The fundamental problem is that variable can not be simply replaces by a value
-(an RDF Term). So instead of replacing a variable by a value, the evaluation of
-the substitue operation is performed with a binding of the variable to the
-intended value, thereby leaving the variable in the query pattern.
+The fundamental problem is that a variable can not be simply replaced by a value
+(an RDF Term) in all places in a graph pattern. There are some places where
+SPARQL function forms and "AS" assignment require a variable. The proposal here
+is to take the variable binding from the input solution, retaining the
+variable in the graph pattern, and disallowing cases that can reset the variable
+binding as is already the case elsewhere in SPARQL.
 
 ## Identified Issues {#issues}
 
 This section describes the issues identified on the 
 SPARQL Exists Community group mailing list 
-<a href="https://lists.w3.org/Archives/Public/public-sparql-exists/2016Jul/0014.html">public-sparql-exists/2016Jul/0014</a>.
+[public-sparql-exists/2016Jul/0014](https://lists.w3.org/Archives/Public/public-sparql-exists/2016Jul/0014.html).
 
 * [Issue-1](#issue-1): Some uses of EXISTS are not defined during evaluation.
 * [Issue-2](#issue-2): Substitution happens where definitions are only for variables.
@@ -56,15 +59,15 @@ and
     FILTER EXISTS { VALUES ?y { 123 } }
 
 The argument to
-<a href="https://www.w3.org/TR/sparql11-query/#defn_evalExists"><tt>exists</tt></a>
+<tt>[exists](https://www.w3.org/TR/sparql11-query/#defn_evalExists)</tt>
 is not explicitly listed as a "Graph Pattern" in the table of SPARQL algebra symbols in
-<a href="https://www.w3.org/TR/sparql11-query/#sparqlQuery">section 18.2</a>
+[section 18.2](https://www.w3.org/TR/sparql11-query/#sparqlQuery)
 when the argument to <tt>EXISTS</tt> is a 
-<a href="https://www.w3.org/TR/sparql11-query/#rGroupGraphPattern">GroupGraphPattern</a>
+[GroupGraphPattern](https://www.w3.org/TR/sparql11-query/#rGroupGraphPattern)
 containing just a 
-<a href="https://www.w3.org/TR/sparql11-query/#subqueries">subquery</a>
+[subquery](https://www.w3.org/TR/sparql11-query/#subqueries)
 or just 
-<a href="https://www.w3.org/TR/sparql11-query/#inline-data">InlineData</a>.
+[InlineData](https://www.w3.org/TR/sparql11-query/#inline-data).
 
 ### Issue 2: Substitution happens where definitions are only for variables {#issue-2}
 
@@ -81,18 +84,18 @@ Both positions "AS ?z" and "SELECT ?x" must be variables.
 
 In the algebra, this affects
 
-* <a href="https://www.w3.org/TR/sparql11-query/#defn_extend"><tt>extend</tt></a>
+* <tt>[extend]("https://www.w3.org/TR/sparql11-query/#defn_extend")</tt>
   (related to the use of <tt>AS</tt> in SPARQL syntax)
-* <a href="https://www.w3.org/TR/sparql11-query/#inline-data">in line data</a> 
+* [in line data](https://www.w3.org/TR/sparql11-query/#inline-data) 
   (related to the use of <tt>VALUES</tt>)
-* <a href="https://www.w3.org/TR/sparql11-query/#func-bound"><tt>BOUND</tt></a>
+* <tt>[BOUND](https://www.w3.org/TR/sparql11-query/#func-bound)</tt>
 
 ### Issue 3: Blank nodes substituted into BGPs act as variables {#issue-3}
 
 In the 
-<a href="https://www.w3.org/TR/sparql11-query/#BasicGraphPattern">evaluation of basic graph patterns</a> 
+[evaluation of basic graph patterns](https://www.w3.org/TR/sparql11-query/#BasicGraphPattern)
 (BGPs) blank nodes 
-<a href="https://www.w3.org/TR/sparql11-query/#BGPsparql">are replaced</a>
+[are replaced](https://www.w3.org/TR/sparql11-query/#BGPsparql)
 by RDF terms from the graph being matched and variables are replaced by a solution
 mapping from query variables to RDF terms so that the  basic graph pattern is
 now a subgraph of the graph being matched.
@@ -101,8 +104,8 @@ Simply substituting a variable with a blank node in the <tt>EXISTS</tt>
 evaluation process does not cause the basic graph pattern to be 
 to be restricted to subgraphs containing that blank node as an RDF term
 because it is mapped by an 
-<a href="https://www.w3.org/TR/2004/REC-rdf-mt-20040210/#definst">RDF instance
-mapping</a> before checking that the BGP after mapping is a subgraph of the
+[RDF instance mapping](https://www.w3.org/TR/2004/REC-rdf-mt-20040210/#definst)
+before checking that the BGP after mapping is a subgraph of the
 graph being queried.
         
 Note that elsewhere in the evaluation of the SPARQL algebra, a solution
@@ -121,7 +124,7 @@ the substitution for <tt>EXISTS</tt> produces
 <tt>BGP(_:c :q :b)</tt> which then
 matches against <tt>:e :q :b</tt> because the <tt>_:c</tt> can be mapped to <tt>:e</tt> by
 the RDF instance mapping that is part of pattern instance mappings in 
-<a href="https://www.w3.org/TR/sparql11-query/#BGPsparql">18.3.1</a>.
+[18.3.1](https://www.w3.org/TR/sparql11-query/#BGPsparql).
 
 ### Issue 4: Substitution can flip MINUS to its disjoint-domain case {#issue-4}
 
@@ -164,18 +167,14 @@ would not normally affect the query results.
     
 ## An Improved "substitute" Operation {#substitute-ng}
 
-All filtering in SPARQL is determining whether a solution mapping passes some
-condition. We call this solution mapping the <dfn>current row</dfn> in this
-description. We call the 
-<a href="https://www.w3.org/TR/sparql11-query/#sparqlQuery">translation to the
-SPARQL algebra</a> of "pattern", the <dfn>EXISTS pattern</dfn>.
+Evalauting
+<tt>[substitute](https://www.w3.org/TR/sparql11-query/#defn_substitute)</tt> is
+performed for a given solution mapping. For example, the `EXISTS` operation
+evaluates to `true` if a graph pattern has one or more matches given the variable bindings
+of a solution mapping.  We call this solution mapping the <dfn>current row</dfn>
+in this description.
 
-Evaluation of the <tt>EXISTS</tt> function is defined by the process of
-<a href="https://www.w3.org/TR/sparql11-query/#defn_substitute">substitution</a>
-appiled to the EXISTS pattern, which is then evaluated. The EXISTS filter
-expression is true if the evaluation results in one or more solution mappings.
-
-This is a section proposes an alternative mechanism.  Rather than replace each
+This section proposes an alternative mechanism.  Rather than replace each
 variable by the value it is bound to in the current row, this alternative
 mechanism makes the whole of the current row available at any point in the
 evaluation of an <tt>EXISTS</tt> expression. It uses the current row to
@@ -183,26 +182,22 @@ restrict the binding of variables at the points where variable bindings are
 created during evaluation of <tt>EXISTS</tt> to be those from the current row.
 It makes illegal syntactic constructs that could lead to an attempt to rebind a
 variable from the current row through using the <tt>AS</tt> syntax.
-      
 
-<a href="#solutions">Section 2.2</a> describes how this alternative definition of
-<tt>EXISTS</tt> addresses each of the issues identified in 
-<a href="#identified-issues">Identifed Issues section</a>.
+Section "[Addressing Issues](#addressing-issues)" describes how this alternative
+definition of <tt>substitute</tt> addresses each of the issues identified above.
       
 There are 3 parts to the proposal:
-      
+
+* Place the current row of mapping variables to value (the RDF terms) so that
+  the variables always have their values from the current row.
+  This is the replacement for syntactic substitution in the original definition.
 * Renaming inner scope variables so that variables that are only used within a
   sub-query are not affected by the current row. This reflects the fact that in
   SPARQL such variables are not present in solutions mappings outside their
   sub-query.
-* Disallowing syntactic forms that set variables potentially already present in the current
+* Disallow syntactic forms that set variables potentially already present in the current
   row. SPARQL solutions mappings can only have one binding for a variable and the
   current row provides that binding.
-* Restricting the value (the RDF term) that a variable can be mapped in a
-  solution mapping during evaluation of <tt>EXISTS</tt>.  This is the
-  replacement for substitution; evaluation that binds a variable proceeds through
-  graph pattern matching but the values it can take are immediately restricted to
-  that in the current row.
 
 ### Renaming
 
@@ -210,7 +205,7 @@ Within sub-queries, variables with the same name can be used but do not
 appear in the overall results of the query if they do not occur in the
 projection in the sub-query. Such inner variables are not 
 <a href="https://www.w3.org/TR/sparql11-query/#variableScope">in-scope</a>
-when they are not mentioned in the projection part of the inner SELECT expression.
+when they are not in the output of the projection part of the inner SELECT expression.
         
     SELECT * {
       ?s :value ?v .
@@ -242,11 +237,11 @@ obtained in the sub-query. A sub-query always has a projection as its top-most
 algebra operator.
 
 To preserve this, any such variables are renamed so they do not coincide with
-variables from the current row being filter by <tt>EXISTS</tt>.
+variables from the current row being filtered by <tt>EXISTS</tt>.
         
 The SPARQL algebra "project" operator has two components, an algebra expression
 and a set of variables for the projection.
-        
+
 <div class="defn">
 <b>Definition: <a id="defn_projmap" name="defn_projmap">Projection Expression Variable Remapping</a></b>
 <p>
@@ -257,8 +252,8 @@ the set of all variables, to V where:
 </p>
 <p class="indent">
 F(v) = v if v in PV<br/>
-F(v) = v1 where v is a variable mentioned in the project expression,
-       but not in PV, and v1 is a fresh variable<br/>
+F(v) = v1 where v is a variable mentioned in the project expression
+       and v1 is a fresh variable<br/>
 F(v) = v otherwise.
 </p>
 Define the <dfn>Projection Expression Variable Remapping</dfn> <tt>PrjMap(P,PV)</tt> to
@@ -291,7 +286,6 @@ visible outside the sub-query, because they do not occur in the projection, the
 result of the sub-query is unchanged. SPARQL algebra expressions can not access
 the name of a variable nor introduce a variable except by remapping. Remapping
 is only applied to variables not visible outside the sub-query.
-        
 
 ### Limitations on Assignment
 
@@ -304,7 +298,7 @@ notes 12 and 13.
 This proposal adds the restriction that any variables in a current
 row, the set of variables 
 <a href="https://www.w3.org/TR/sparql11-query/#variableScope">in-scope</a>
-of the FILTER containing EXISTS, can not be assigned with the <tt>extend</tt>
+of the expression containing EXISTS, can not be assigned with the <tt>extend</tt>
 algebra function linked to the <tt>AS</tt> syntax.
 
 In addition, any use of <tt>VALUES</tt> in the EXISTS expression must not
@@ -327,7 +321,7 @@ Binding for variables occur in several places in SPARQL:
 Note that other places where solution mappings add variables are in
 <tt>extend</tt> function (connected to the <tt>AS</tt> syntax)
 and <tt>a multiset</tt> from <tt>VALUES</tt> syntax.
-<a href="#limitations-on-assignment">Limitations on Assignment</a> 
+[Limitations on Assignment]("#limitations-on-assignment")
 forbid this being of variables of the current row.
 
 Restricting the RDF Terms for a variable binding is done using
@@ -342,7 +336,8 @@ For solution mapping μ, define Table(μ) to be the multiset formed from μ.
 <p class="indent">
   Table(μ) = { μ }<br/>
   Card[μ] = 1
-  
+</p>
+<p>
   Define the <dfn>Values Insertion</dfn> function <tt>Replace(X, μ)</tt> to
   replace each occurence Y of a 
   <a href="https://www.w3.org/TR/sparql11-query/#sparqlTranslateBasicGraphPatterns">Basic Graph Pattern</a>,
@@ -363,13 +358,13 @@ Let μ be the current solution mapping for a filter and X a graph pattern,
 define the <dfn>Evaluation of Exists</dfn> <tt>exists(X)</tt>
 </p>
 <p class="indent">
-  exists(X) = true if and only if eval(D(G), Replace(PrjMap(X), μ) is a non-empty solution sequence.
+  exists(X) = true if eval(D(G), Replace(PrjMap(X), μ) is a non-empty solution sequence.
   <br/>
   exists(X) = false otherwise
 </p>
 </div>
 
-## Addressing Issues {#fixing}
+## Addressing Issues {#addressing-issues}
 
 This section addresses each issue identified, given the proposal above.
       
@@ -398,7 +393,7 @@ of solution mappings count as graph patterns.
 
 ### Issue 2: Substitution happens where definitions are only for variables
 
-Rather then replace a varialbe by its value in the current row, the new
+Rather then replace a variable by its value in the current row, the new
 mechanism makes the binding of variable to value available. The variable
 remains in the graph pattern of <tt>EXISTS</tt> and the evaluation.
 
@@ -411,10 +406,10 @@ current row.
          
 ### Issue 4: Substitution can flip MINUS to its disjoint-domain case
  
-Issue 4 is addressed because variablea re not removed from the domain of
-<tt>MINUS</tt>. This propsoal does not preserve all uses <tt>MINUS</tt>
-expressions; the problem identified in issue 4 is considered to be a bug in the original
-SPARQL specification.
+Issue 4 is addressed because variables are not removed from the domain of
+<tt>MINUS</tt>. This propsoal does not preserve all uses of <tt>MINUS</tt>
+expressions; the problem identified in issue 4 is considered to be a bug in the
+SPARQL 1.1 specification.
          
 ### Issue 5: Substitution affects disconnected variables
 
