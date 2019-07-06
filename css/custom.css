@@ -19,6 +19,26 @@ body { font-family: "Roboto", sans-serif ;
 }
 */
 
+/* From bootstrap: */
+/*
+page-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 1px solid #eee;
+}
+*/
+
+/* Override bootstrap */
+.page-header {
+  border-bottom: none;
+}
+
+.docinfo {
+    margin-bottom :   30px;
+    margin-top :      -10px;
+    margin-left :     10% ;
+}
+
 a         { color : #0000C0 ; }
 a:hover   { text-decoration: underline ; }
 a:visited { color : #000080 ; }
@@ -52,4 +72,11 @@ table th {
   padding-left: 0.5em ;
   padding-right: 0.5em ;
   background-color: #ededee;
+}
+
+/* Don't print link hrefs */
+@media print {
+  a[href]:after {
+    content: none
+  }
 }

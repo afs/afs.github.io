@@ -2,7 +2,6 @@
 
 "jekyll server" -> localhost:4000
 
-
 Keep Jekyll up-to-date:
 "bundle update"
 
@@ -38,3 +37,5 @@ One domain only
 
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
 16px? 17px?
+
+*** If the *.md file is in _site, not the .md, then check the Jekyll md header.
