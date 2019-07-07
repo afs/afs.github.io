@@ -1,6 +1,6 @@
 ---
 layout: doc
-title: Extending SHACL for RDF Datasets
+title: Extending SHACL to RDF Datasets
 ---
 <div class="docinfo">
      <p>Andy Seaborne</p>
@@ -75,7 +75,7 @@ example, if a shape defines a number of required properties ("`sh:minCount 1`"),
 these may be in different named graphs, but if present in the union graph,
 validating suceeds.
 
-## Grouping Shapes.
+## Grouping Shapes
 
 The graphs of the shapes dataset can be used to group shapes. If a
 `shx:targetGraph` triple has a graph name as subject, then the target rule is
@@ -113,6 +113,14 @@ It is similar to `owl:imports` except the inclusion is named by the subject and
 only applies to including graphs within the shapes dataset.
 
 It is applied transitively.
+
+## Validation Reports
+
+Each validation result in a validation report should have a `sh:resultGraph`
+triple whose object is the graph in which the validation report occurs. It is
+shape's `shx:targetGraph` if that is given, the graph name matching
+`shx:targetGraphPattern` or the specific named graph of the data dataset in
+the case of `shx:named` or `shx:all`.
 
 ## Examples
 
