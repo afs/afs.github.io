@@ -40,15 +40,8 @@ is assumed in the definitions.
 `shx:targetGraph` defines graphs to apply shapes to.
 The property can be repeated.
 
-The subject defines scope - named graph or the whole dataset (when the subject
-is the base URI of the shapes dataset).
-
-If the property is used in graph (named or default) of the shapes dataset where
-the subject is not a shape, it applies to all the shapes in that shapes graph of
-the shapes dataset.
-
-If the property is used with a subject that is a shape, it applies to that shape
-and not the whole shapes graph.
+The subject defines scope - it can be a specific shape, a named graph or the
+whole dataset (when the subject is the base URI of the shapes dataset).
 
 Certain URIs define a collection of graphs in the target dataset.
 
@@ -79,7 +72,8 @@ validating suceeds.
 
 The graphs of the shapes dataset can be used to group shapes. If a
 `shx:targetGraph` triple has a graph name as subject, then the target rule is
-applied as the default rule for all shapes in that shapes graph. Teh shape graph graph name does not need to correspond to any graph in the data to be validated. 
+applied as the default rule for all shapes in that shapes graph. The shape graph
+graph name does not need to correspond to any graph in the data to be validated.
 
 ```
 GRAPH <#g> {
@@ -99,11 +93,11 @@ GRAPH <#g> {
 ```
 Similarly, `shx:targetGraphExclude` also applies to the whole graph.
 
-### Sharing Common shapes patterns
+### Sharing common shapes patterns
 
-The property `shx:include` can be used to include triples from another graph. A
-typical use is to include shapes from another graph which does not have a
-`shx:targetGraph`, using it like a includes library.
+The property `shx:include` can be used to include triples from another named
+graph of the shapes dataset. A typical use is to include shapes from another
+graph which does not have a `shx:targetGraph`, using it like a includes library.
 
 If the subject is the URI of the shapes dataset, the inclusion is into 
 declaration applies to the whole dataet (all shapes graphs), otherwise it is to
@@ -112,7 +106,7 @@ the named graph of the subject of the triple.
 It is similar to `owl:imports` except the inclusion is named by the subject and
 only applies to including graphs within the shapes dataset.
 
-It is applied transitively.
+`shx:include` is applied transitively.
 
 ## Validation Reports
 
@@ -121,6 +115,10 @@ triple whose object is the graph in which the validation report occurs. It is
 shape's `shx:targetGraph` if that is given, the graph name matching
 `shx:targetGraphPattern` or the specific named graph of the data dataset in
 the case of `shx:named` or `shx:all`.
+
+| URI | Definition | 
+|-----|------------|
+| `shx:targetGraphPattern` | Data graph cause the validation result |
 
 ## Examples
 
