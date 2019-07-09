@@ -17,12 +17,9 @@ a validation report.
 
 ## Overview
 
-Validation of a RDF Datasets is performed by associating a shapes graph with
-each graph (named graph and default graph) in the datasets, then applying the
-SHACL validation process to each graph.
-
-This is achieved by associating a "target graph" with each shape. These can be
-specified on each shape but can be written to apply to groups of shapes.
+Validation of a RDF Datasets is performed by associating a target with each
+shape in a "Shapes Dataset". The target graph can be specified on each shape
+but can be written to apply to groups of shapes.
 
 Shapes graphs can be reused so that the same set of shapes is used to validate
 multiple graphs in the dataset. The shapes to used for a dataset are contained
@@ -35,25 +32,22 @@ The declaration
 ```prefix shx: <http://www.w3.org/ns/shacl-x#>```
 is assumed in the definitions.
 
-### Target Graphs
+## Target Graphs
 
-`shx:targetGraph` defines graphs to apply shapes to.
+`shx:targetGraph` defines graphs to apply a shape to.
 The property can be repeated.
 
-The subject defines scope - it can be a specific shape, a named graph or the
-whole dataset (when the subject is the base URI of the shapes dataset).
+Example: a shape that is scoped to data graph `data:namedGraph1`:
+```
+:nodeShape0
+    shx:targetGraph data:namedGraph1 ;
+    sh:targetObjectsOf ns:q ;
+    sh:datatype xsd:integer ;
+    .
+```
 
-Certain URIs define a collection of graphs in the target dataset.
-
-| URI | Definition | 
-|-----|------------|
-| `shx:targetGraph`        | Property identifying a data graph to target  |
-| `shx:targetGraphExclude` | Property identifying a data graph to exclude as a target   |
-
-`shx:targetGraphExclude` defines graphs to be excluded from the target graphs.
-This target condition is applied after calculating the included target graphs.
-
-## Special Graph Names
+Certain URIs define a collection of graphs in the target dataset. The shape
+applies to each of the graphs as the data graph.
 
 | URI | Graphs     | 
 |-----|------------|
@@ -62,11 +56,58 @@ This target condition is applied after calculating the included target graphs.
 | `shx:default` | The default graph of the data dataset.  |
 | `shx:union`   | The union graph formed from all named graphs of the data dataset.  |
 
+The subject of the `shx:targetGraph` triple defines scope - it can be a
+specific shape, a named graph of the shapes dataset or the whole shapes
+dataset (when the subject is the URI of the shapes dataset).
+
+```
+# Shapes Named graph
+<#gn1> shx:targetGraph data:namedGraph1 .
+GRAPH <#gn1> {
+    :nodeShape0
+        sh:targetObjectsOf ns:q ;
+        sh:datatype xsd:integer ;
+}
+
+```
+```
+# Shapes Dataset
+# All shapes in the shape dataset apply to all graphs in the data dataset.
+<> shx:targetGraph shx:all .
+
+:nodeShape0
+    sh:targetObjectsOf ns:q ;
+    sh:datatype xsd:integer ;
+}
+
+```
+
 Validating with a target of `shx:union` is performed on the union of the named
 graph so the triples used to fulfil a shape may be in different graph. For
 example, if a shape defines a number of required properties ("`sh:minCount 1`"),
 these may be in different named graphs, but if present in the union graph,
 validating suceeds.
+
+`shx:targetGraphExclude` defines graphs to be excluded from the target graphs.
+This target condition is applied after calculating the included target graphs
+for a shape.
+
+| URI | Definition | 
+|-----|------------|
+| `shx:targetGraph`        | Property identifying a data graph to target  |
+| `shx:targetGraphExclude` | Property identifying a data graph to exclude as a target |
+
+## Validation Reports
+
+Each validation result in a validation report should have a `sh:resultGraph`
+triple whose object is the graph in which the validation report occurs. It is
+the shape's `shx:targetGraph` if that is given, the graph name matching
+`shx:targetGraphPattern` or the specific named graph of the data dataset in
+the case of `shx:named` or `shx:all`.
+
+| URI | Definition | 
+|-----|------------|
+| `shx:resultGraph` | Data graph that caused the validation result |
 
 ## Grouping Shapes
 
@@ -75,29 +116,31 @@ The graphs of the shapes dataset can be used to group shapes. If a
 applied as the default rule for all shapes in that shapes graph. The shape graph
 graph name does not need to correspond to any graph in the data to be validated.
 
-```
-GRAPH <#g> {
-   <#g> shx:targetGraph data:graphName .
-   ... any shapes in graph <#g> will have the targetGraph rule above ...
-}
-```
-
-This does not need to go the named graph itself - it can appear in the default
-graph of the shapes dataset.
+The `shx:targetGraph` can be in the defaultl graph of the shapes datset or in
+a named graph. These two examples achive the same effect.
 
 ```
 <#g> shx:targetGraph data:graphName .
 GRAPH <#g> {
-   ... any shapes in graph <#g> will have the targetGraph rule above ...
+   ... any shapes in graph <#g> will have the targetGraph scope above ...
 }
 ```
+
+```
+GRAPH <#g> {
+   <#g> shx:targetGraph data:graphName .
+   ... any shapes in graph <#g> will have the targetGraph scope above ...
+}
+```
+
 Similarly, `shx:targetGraphExclude` also applies to the whole graph.
 
-### Sharing common shapes patterns
+### Sharing Common Shapes Patterns
 
 The property `shx:include` can be used to include triples from another named
 graph of the shapes dataset. A typical use is to include shapes from another
-graph which does not have a `shx:targetGraph`, using it like a includes library.
+graph which does not have a `shx:targetGraph`, using it like a includes
+library.
 
 If the subject is the URI of the shapes dataset, the inclusion is into 
 declaration applies to the whole dataet (all shapes graphs), otherwise it is to
@@ -107,18 +150,6 @@ It is similar to `owl:imports` except the inclusion is named by the subject and
 only applies to including graphs within the shapes dataset.
 
 `shx:include` is applied transitively.
-
-## Validation Reports
-
-Each validation result in a validation report should have a `sh:resultGraph`
-triple whose object is the graph in which the validation report occurs. It is
-shape's `shx:targetGraph` if that is given, the graph name matching
-`shx:targetGraphPattern` or the specific named graph of the data dataset in
-the case of `shx:named` or `shx:all`.
-
-| URI | Definition | 
-|-----|------------|
-| `shx:targetGraphPattern` | Data graph cause the validation result |
 
 ## Examples
 
@@ -140,10 +171,11 @@ PREFIX ns       <http:/example/ns#>
 
 ### Examples
 
-This is in the default graph of the shapes dataset which applies to
-`data:namedGraph1`.
+Apply all shapes to all graphs in the data.
 
 ```
+<> shx:targetGraph shx:all .
+
 :nodeShape0
     shx:targetGraph data:namedGraph1 ;
     sh:targetObjectsOf ns:q ;
@@ -203,11 +235,11 @@ For targets, a regular expression to filter the data dataset graph names based
 on URIs:
 
 ```
-[] shx:targetGraphPattern "foobar" .
+[] shx:targetGraphPattern "http://example/.*/shapes" .
 ```
 
 ```
-[] shx:targetGraphPattern ("foobar" "i") .
+[] shx:targetGraphPattern ("http://example/shapes/set-\\d{1,4}" . "i") .
 ```
 
 Similarly `shx:targetGraphExcludePattern`.
@@ -218,18 +250,3 @@ Constraints on graphs and graph names (e.g. URI pattern)
 
 These can be done by escaping to SPARQL and a global constraint but if there are
 some common constraints, then including a direct form would be useful.
-
-## Notes:
-
-Missing types:
-
-| URI | Type Definition | 
-|-----|-----------------|
-| `sh:ShapesGraph`         | The class of Shapes Graphs    |
-| `shx:ShapesDataset`      | The class of Shapes Datasets  |
-
-
-The "Shapes Dataset" could be a single graph with just the `shx:targetGraph` and
-`shx:targetGraphExclude` vocabulary applied to every shape.  This is a special
-case of the design above - `shx:targetGraph` on shapes and using the default
-graph only of the TriG file.
