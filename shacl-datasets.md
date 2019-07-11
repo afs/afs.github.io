@@ -6,26 +6,26 @@ title: Extending SHACL to RDF Datasets
      <p>Andy Seaborne</p>
 </div>
 
-This note describes applying the 
-[SHACL Shapes Constraint Language](https://www.w3.org/TR/shacl/)
-to [RDF Datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
-
 SHACL defines a set of validation conditions in a [Shapes
 Graph](https://www.w3.org/TR/shacl/#shapes-graph). These are used to validate an
 [RDF Graph](https://www.w3.org/TR/rdf11-concepts/#section-rdf-graph) to produce
 a validation report.
 
+This note describes applying the 
+[SHACL Shapes Constraint Language](https://www.w3.org/TR/shacl/)
+to [RDF Datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
+
 ## Overview
 
-Validation of a RDF Datasets is performed by associating a target with each
-shape in a "Shapes Dataset". The target graph can be specified on each shape
-but can be written to apply to groups of shapes.
+Validation of a RDF Datasets is performed by associating a target graph with
+each shape in a "Shapes Dataset". The target graph can be specified on each
+shape but can also be written to apply to groups of shapes.
 
 Shapes graphs can be reused so that the same set of shapes is used to validate
 multiple graphs in the dataset. The shapes to used for a dataset are contained
 in a "Shapes Dataset", a collection of shapes graphs and which defines the
 shapes to be applied to an RDF datasets with different sets of shapes for
-different graphs in the dataset and sharing of shapes between uses on target
+different graphs in the dataset and sharing of shapes between different target
 graphs.
 
 The declaration
@@ -56,7 +56,7 @@ applies to each of the graphs as the data graph.
 | `shx:default` | The default graph of the data dataset.  |
 | `shx:union`   | The union graph formed from all named graphs of the data dataset.  |
 
-The subject of the `shx:targetGraph` triple defines scope - it can be a
+The subject of the `shx:targetGraph` triple defines the scope - it can be a
 specific shape, a named graph of the shapes dataset or the whole shapes
 dataset (when the subject is the URI of the shapes dataset).
 
@@ -99,7 +99,7 @@ for a shape.
 
 ## Validation Reports
 
-Each validation result in a validation report should have a `sh:resultGraph`
+Each validation result in a validation report should have a `shx:resultGraph`
 triple whose object is the graph in which the validation report occurs. It is
 the shape's `shx:targetGraph` if that is given, the graph name matching
 `shx:targetGraphPattern` or the specific named graph of the data dataset in
@@ -116,7 +116,7 @@ The graphs of the shapes dataset can be used to group shapes. If a
 applied as the default rule for all shapes in that shapes graph. The shape graph
 graph name does not need to correspond to any graph in the data to be validated.
 
-The `shx:targetGraph` can be in the defaultl graph of the shapes datset or in
+The `shx:targetGraph` can be in the default graph of the shapes datset or in
 a named graph. These two examples achive the same effect.
 
 ```
@@ -133,7 +133,7 @@ GRAPH <#g> {
 }
 ```
 
-Similarly, `shx:targetGraphExclude` also applies to the whole graph.
+The grouping rules applies to `shx:targetGraphExclude` as well.
 
 ### Sharing Common Shapes Patterns
 
@@ -244,9 +244,9 @@ on URIs:
 
 Similarly `shx:targetGraphExcludePattern`.
 
-### Dataset-wide constraints
+### Dataset-level constraints
 
-Constraints on graphs and graph names (e.g. URI pattern)
+Constraints on graphs and graph names (e.g. URI pattern of gah names).
 
 These can be done by escaping to SPARQL and a global constraint but if there are
 some common constraints, then including a direct form would be useful.
