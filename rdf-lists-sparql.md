@@ -6,9 +6,8 @@ title: Updating RDF Lists with SPARQL
      <p>Andy Seaborne</p>
 </div>
 
-<i>Migrated from the original:
+<i>Migrated from the original (2011):
 [Updating RDF Lists with SPARQL](http://seaborne.blogspot.com/2011/03/updating-rdf-lists-with-sparql.html).</i>
-
 
 Something the [SPARQL 1.1 Working Group](http://www.w3.org/2009/sparql/wiki/Main_Page)
 discussed was updates to RDF lists.
