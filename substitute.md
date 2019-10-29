@@ -1,9 +1,10 @@
 ---
 layout: doc
-title: Improving SPARQL "EXISTS"
+title: Substitution of Variables in SPARQL
 ---
 <div class="docinfo">
      <p>Andy Seaborne</p>
+     <p>October 2019</p>
 </div>
 
 The SPARQL 1.1 algebra operation
