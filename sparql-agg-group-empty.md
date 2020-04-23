@@ -22,7 +22,7 @@ and no `GROUP BY`, the spec needs a fix to get the expected answer.
 
 ## Description {#description}
 
-Informally, what happens in groupign and aggregation is that the matches from
+Informally, what happens in grouping and aggregation is that the matches from
 the `WHERE` clause are paritioned by calculating the group key from the `GROUP
 BY` expression for each row , with each row going into a collection of rows with
 the same group key. We end up with a dictionary mapping group key to a
