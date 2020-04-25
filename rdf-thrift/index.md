@@ -36,6 +36,6 @@ encoding layer - this is not used here.)
 * Format description: [RDF Binary encoding using Thrift](rdf-binary-thrift.html).
 
 * Known implementations: 
-  * Apache Jena: [Jena API to RDF Trift](https://jena.apache.org/documentation/io/rdf-binary.html.html).
+  * Apache Jena: [Jena API to RDF Trift](https://jena.apache.org/documentation/io/rdf-binary.html).
 
 Document license: [Apache License](LICENSE.txt) .

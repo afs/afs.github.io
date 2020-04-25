@@ -3,9 +3,9 @@
         //fonts.googleapis.com/css?family=Roboto:300,500,300italic,500italic
 */
 
-body { font-family: "Open Sans", sans-serif ; 
+body { font-family: "Muli", "Open Sans", sans-serif ; 
        font-size:   15px ;
-       font-weight: 400 ;
+       font-weight: 300 ;
        line-height: 25px;
        color:       #404040 ;
 }
