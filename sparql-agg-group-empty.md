@@ -9,8 +9,9 @@ title: SPARQL Grouping and Aggregation with no matches
 
 Grouping and Aggregation is the combination of `GROUP BY` and one of the
 aggregation functions such as `COUNT` or `MAX`.  When there are no matches to
-the `WHERE` clause, the spec and one fo the tests don't agree. In the case of aggregation
-and no `GROUP BY`, the spec needs a fix to get the expected answer.
+the `WHERE` clause, the spec and one of the original workign groups tests don't
+agree. In the case of aggregation and no `GROUP BY`, the spec needs a fix to get
+the expected answer.
 
 * [Description](#description)
 * [Grouping and Aggregation, no matching rows](#group-agg-no-rows)
@@ -27,7 +28,7 @@ the `WHERE` clause are paritioned by calculating the group key from the `GROUP
 BY` expression for each row , with each row going into a collection of rows with
 the same group key. We end up with a dictionary mapping group key to a
 collection of those rows with the same group key. Each grouping of rows has at
-least one row in it because create dictionary entry a row with that group key
+least one row in it because to create dictionary entry a row with that group key
 must have been encountered.
 
 When there is aggregation, the aggregation function (`COUNT`, `MAX`, etc) is
@@ -40,7 +41,7 @@ There is a special case of aggregation when there is no `GROUP BY` but there is
 an aggregate function. All the rows are collected together with a special group
 key of `1`. The dictionary has one entry.
 
-There is has a problem in the specfication here - it puts in a special `GROUP BY`
+There is a problem in the specfication here - it puts in a special `GROUP BY`
 expression but when there are no rows from the `WHERE` clause, it does not get
 called. [A possible solution](#no-group) is given below.
 
@@ -55,8 +56,6 @@ From this we can see that:
 
 There is a disprepency between the SPARQL tests and the specification.
 The test [aggregates-agg-empty-group](https://www.w3.org/2009/sparql/docs/tests/summary.html#aggregates-agg-empty-group)
-(Also found at
-[rdf-tests:sparql11/data-sparql11/aggregates](https://github.com/w3c/rdf-tests/tree/gh-pages/sparql11/data-sparql11/aggregates))
 runs on an empty graph.
 
     PREFIX ex: <http://example.com/>
@@ -90,8 +89,8 @@ which is one row, with no values, not zero rows.
     |   |     |
     -----------
 
-(the original test results have no `<variable name="x"/>` - that's
-corrected in test manifest with [these results](https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group2.srx))
+(the original [test results]((https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group.srx)
+have no `<variable name="x"/>` - that's corrected in test manifest with [these results](https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group2.srx).)
 
 It should be:
 
@@ -156,9 +155,9 @@ gives
 
 The difference is that when there is an empty outcome from `GROUP BY`, there is
 an empty dictionary and the aggregation function, `MAX` or `COUNT` isn't called
-at all. With no `GROUP BY`, theer is a dictionary enry with an empty collection
-of rows and the case `Max({}) = error` covers the case of a call where there
-zero rows to aggregate.
+at all. With no `GROUP BY`, there is a dictionary entry with an empty collection
+of rows and the case `Max({}) = error` or `Count({}) = 0` covers the case of a
+call where there zero rows to aggregate.
 
     SELECT ?x
     WHERE {
@@ -173,7 +172,7 @@ These are the relevant parts of the spec and errata:
 
 Section 18.5.1 https://www.w3.org/TR/sparql11-query/#aggregateAlgebra
 
-Group, produces a dictionary the group key `ListEval(exprlist, μ)` to (`→`) rows `{ μ' | ...}`:
+Group, produces a dictionary with group key `ListEval(exprlist, μ)` to (`→`) rows `{ μ' | ...}`:
 
     Group(exprlist, Ω) = { ListEval(exprlist, μ) → { μ' | μ' in Ω, ListEval(exprlist, μ) = ListEval(exprlist, μ') } | μ in Ω }
 
@@ -193,6 +192,8 @@ Calling the aggregate function happens within the `F(Ω)` calling `func`.
 
 ## Execution when grouping has no rows {#exec-no-rows}
 
+Executing when the grouping has no rows, we get:
+
     Group(exprlist, Ω) = { }
 
 because `μ in Ω` is empty. Then aggregation is on the empty dictionary:
@@ -210,9 +211,8 @@ If `GROUP BY` produces zero rows, aggregation produces zero rows.
 
 Use of aggregates when there is no `GROUP` BY is different.
 
-Section 8.2.4.1 https://www.w3.org/TR/sparql11-query/#sparqlGroupAggregate
-
-This puts in a dummy key of `(1)` (a exprlist of one element which is the value 1).
+In section [18.2.4.1 Grouping and Aggregation}(https://www.w3.org/TR/sparql11-query/#sparqlGroupAggregate)
+puts in a dummy key of `(1)` (a exprlist of one element which is the value 1).
 
 But if there are no rows for the patten matching.
 
@@ -223,7 +223,9 @@ regardless of the `exprlist` - the dictionary entry using key 1 is not created.
 But we expect
 
     SELECT (COUNT(*) AS ?C)
-    WHERE { ?x ex:p ?value }
+    WHERE {
+        ?x ex:p ?value
+    }
 
 (no matches to the `WHERE`) to be one row with `?C` being `0`.
 
@@ -242,13 +244,13 @@ which is "no rows" again.
 
 ## Possible Fix, "no group" case {#no-group-fix}
 
-Somehow, "no group by, with aggregates" needs to made special.
+Somehow, "no group by, with aggregates" needs to be made special.
 
 One way is to make "aggregate, no group" become a distinct, special case of
 `Group()` that creates the right dictionary.
 
-8.2.4.1 https://www.w3.org/TR/sparql11-query/#sparqlGroupAggregate<br/>
-Step Aggregates
+This can be done in
+[18.2.4.1, Step Aggregates](https://www.w3.org/TR/sparql11-query/#sparqlGroupAggregate).
 
 We make the dummy key special marker `'group-all'`, then group all rows into
 one dictionary entry, even if the row collection is empty.
