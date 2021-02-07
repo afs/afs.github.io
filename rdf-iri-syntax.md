@@ -230,7 +230,7 @@ This can be tricky for the parser to check if it does not know the scheme.
 
 * The scheme-specific rules for http, https and urn schemes are required:
    * If 'http:' it follows the HTTP scheme rule: `http-URI`
-   * If 'urn', it matches the requirment for "urn:2chars:1char"
+   * If 'urn:', it matches the requirment for "urn:2+chars:1+char"
 
 * Hex in %-encoding SHOULD be uppercase.
 
@@ -241,14 +241,12 @@ PREFIX u: <urn:uuid:>
 
 u:66d5b9e2-5abe-49be-bfc9-1ed0d997e07f
 ```
-
 or 
 ```
 BASE <urn:>
 
 ## Resolves to urn:uuid:66d5...
 <uuid:66d5b9e2-5abe-49be-bfc9-1ed0d997e07f>
-
 ```
 
 The problem here is that `urn:uuid:` is not a legal URN.
