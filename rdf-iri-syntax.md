@@ -83,13 +83,13 @@ https://tools.ietf.org/html/rfc3986#appendix-A
                  / path-empty
 ```
 
-We've already got to one important point - an _absolute URI_. An abolute URI has
+We've already got to one important point - an _absolute URI_. An absolute URI has
 a URI scheme, and does not have a fragment.  
 
 An absolute URI with a fragment is just "URI".
 
 What we want is the full URI rule and also require it uses the "// authority"
-rule if a scheme involves that component. 
+rule if a scheme involves that component.
 
 Specifc URI schemes can add additional requirments. 
 HTTP (RFC7230) requires the part `"//" authority`; 
@@ -115,20 +115,22 @@ references should have been converted.
 
 ### Example
 
-By this definition:
+By the definitions in RFC 3986:
 
 ```
     http:abcd
+    http:/abcd
 ```
 
-is an absolute URI - it has a URI scheme, it does not have a fragment.
+are absolute URIs - it has a URI scheme, it does not have a fragment.
 
 But it is not an "[http-URI](#http)" which is defined in
 [RFC7230 sec 2.7.1](https://tools.ietf.org/html/rfc7230#section-2.7.1)
-because http-URI defines additional syntax requirements.
+because http-URI defines additional syntax requirements. An http-URI requires
+the `"//" authority path-abempty` choice in `hier-part`.
 
 With [non-strict resolution](https://tools.ietf.org/html/rfc3986#section-5.2.2),
-it won't appear in RDF abstract syntax.
+and an valid HTTP base URI, the examples won't appear in RDF abstract syntax.
 
 ### Notes about IRIs/URIs:
 
