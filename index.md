@@ -5,8 +5,15 @@ title: Andy Seaborne
 
 Places to go:
 
-* [RDF Thrift](/rdf-thrift/) -- a binary encoding for RDF and SPARQL Result Sets.
+* [RDF Delta](/rdf-delta/)
 
-* [RDF Delta](/rdf-delta/) -- change format and change logs for RDF
+Change format and change logs for RDF.
+High-availability Apache Jena Fuseki.
 
-* [RDF and IRI Syntax](rdf-iri-syntax.html) -- about the detail of IRIs/URIs.
+* [RDF Thrift](/rdf-thrift/)
+
+A binary encoding for RDF and SPARQL Result Sets.
+
+* [RDF and IRI Syntax](rdf-iri-syntax.html)
+
+Practical notes on the details of IRIs/URIs.
