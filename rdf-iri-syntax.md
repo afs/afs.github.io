@@ -65,11 +65,14 @@ As of [RFC 3986](https://tools.ietf.org/html/rfc3986), relative IRIs are called
 
 ### Definition of URI syntax
 
-https://tools.ietf.org/html/rfc3986#section-4.1
-A "URI" is a URI-reference after it has been resolved.
+In [RFC3986 section-4.1](https://tools.ietf.org/html/rfc3986#section-4.1)
+defines "URI".
 
-The grammar:
-https://tools.ietf.org/html/rfc3986#appendix-A
+A "URI" is URI-reference after it has been resolved.
+
+The relevant part of the grammar in 
+[RFC3986 appendix-A](https://tools.ietf.org/html/rfc3986#appendix-A)
+is:
 
 ```
    absolute-URI  = scheme ":" hier-part [ "?" query ]
@@ -79,7 +82,6 @@ https://tools.ietf.org/html/rfc3986#appendix-A
    hier-part     = "//" authority path-abempty
                  / path-absolute
                  / path-rootless
-                 / path-empty
                  / path-empty
 ```
 
@@ -92,11 +94,14 @@ What we want is the full URI rule and also require it uses the "// authority"
 rule if a scheme involves that component.
 
 Specifc URI schemes can add additional requirments. 
-HTTP (RFC7230) requires the part `"//" authority`; 
+HTTP ([RFC 7230](https://tools.ietf.org/html/rfc7230))
+requires an http URI to have the part `"//" authority`; 
 the urn scheme does not have an authority.
 
-URN (RFC8141) says a urn has two colons, and that the NID part must be at
-least two characters and the NSS part at last one character.
+URN ([RFC 8141](https://tools.ietf.org/html/rfc8141)) does not have an authority
+part - it uses the `path-rootless` production. It does additionally require the
+path to have two colons, the NID part must be at
+least two characters, and the NSS part at least one character.
 
 ### Relative References
 
@@ -137,7 +142,7 @@ and an valid HTTP base URI, the examples won't appear in RDF abstract syntax.
 * Space (U+0200) is not legal in an IRI.
 * `@`, `~`, `(`, `)` and `:` are legal in the path, query and fragment components.
 * `{` and `}` are not legal in IRIs.
-* `[` and `]` are only legal as ipv6 address delimiters.
+* `[` and `]` are only legal as IPv6 address delimiters.
 * Encoding with "%hex" is not an escape mechanism. `%20` puts three characters into
 the IRI: `%`, `2`, `0`.
 
@@ -163,7 +168,7 @@ so the http URI scheme adds a requirement that there must be a "//" and
 authority (host and port), followed by an absolute path (starts with "/") or is
 absent (empty string, no "/").
 
-## URN
+## URN {#urn}
 
 The
 [syntax of the urn URI scheme](https://tools.ietf.org/html/rfc8141#section-2)
@@ -193,7 +198,7 @@ legal URI in the urn scheme because the "x" is the NID part and is too short.
 
 By the general URI syntax, the URI path component is the "NID:NSS" part of the URN.
 
-### UUIDs
+## UUIDs {#uuid}
 
 The correct way to use UUIDs 
 ([RFC 4122](https://tools.ietf.org/html/rfc4122#section-3))
@@ -203,19 +208,28 @@ Hex digits should be lower case.
 There was a [proposal](https://tools.ietf.org/html/draft-kindel-uuid-uri-00) for
 a "uuid" scheme, it is is sometimes seen but it was only ever a draft. 
 
-## file:
+## "file" URI scheme {#file]
 
-The file URI scheme had for a long time been only loosely defined. 
-In [RFC 8089](https://tools.ietf.org/html/rfc8089), there is now a 
-definition, and it includes common usage such as relative filenames (relative to
-their point of use) for example `file:directory/file.txt`, can be used.
+The file URI scheme had for a long time been only loosely defined in
+[RFC 1738 section 3.10](https://tools.ietf.org/html/rfc1738#section-3.10).
+Common usage was beyond the definition; character set issues were unclear.
+
+[RFC 8089](https://tools.ietf.org/html/rfc8089) is a formal defintion compatible
+with the URI syntax for RFC 3986.  It includes common usage such as relative
+filenames (relative to their point of use), for example
+`file:directory/file.txt`, can be used.
 
 While for RDF the file schema is of limited use, the file URI scheme is useful
-when working with files, for example using RDF for configuration files on the
+when working with local files, for example using RDF for configuration files on the
 local machine. Such URIs will be of the form `file:///` (that is, 3 '/') using
-the file scheme convention that "localhost" canm be dropped.
+the file scheme convention that "localhost" can be dropped.
 
 ## RDF References
+
+It woudl be useful to pull all these considerations together into a distinct
+piece of terminolgy 
+
+"RDF References":
 
 * It is a URI
 
@@ -238,12 +252,15 @@ This can be tricky for the parser to check if it does not know the scheme.
 
 ## Gotchas
 
+In Trutle related synatxes, there are two places where "partial URIs" are used.
+
 ```
 PREFIX u: <urn:uuid:>
 
 u:66d5b9e2-5abe-49be-bfc9-1ed0d997e07f
 ```
-or 
+but `urn:uuid:` is not a legal URN.
+
 ```
 BASE <urn:>
 
@@ -251,4 +268,4 @@ BASE <urn:>
 <uuid:66d5b9e2-5abe-49be-bfc9-1ed0d997e07f>
 ```
 
-The problem here is that `urn:uuid:` is not a legal URN.
+but `urn:` is not a legal URNs.
