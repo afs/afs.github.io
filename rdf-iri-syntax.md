@@ -21,31 +21,28 @@ IRIs in the companion [RFC 3987](https://tools.ietf.org/html/rfc3987]) which
 gives the modifications necessary for the wider range of
 Unicode characters in URIs.
 
-URI schemes can add constarints on the URI syntax; for example, [RFC
+URI schemes can add constraints on the URI syntax; for example, [RFC
 7230](https://tools.ietf.org/html/rfc7230) defines the http and https shemes.
 
 This article introduces the terminology 'RDF Reference' to put all the
 implications into one definition.
 
-## Links
 
-Links to relevant documents:
+## TOC {#toc}
 
-|           | Defined by: |
-|-----------|-------------| 
-| URI       | [RFC 3986](https://tools.ietf.org/html/rfc3986) |
-| IRI       | [RFC 3987](https://tools.ietf.org/html/rfc3987) |
-| http:     | [RFC 7230](https://tools.ietf.org/html/rfc7230) |
-| urn:      | [RFC 8141](https://tools.ietf.org/html/rfc8141) |
-| urn:uuid: | [RFC 4122](https://tools.ietf.org/html/rfc4122) |
-| did:      | [W3C DID](https://www.w3.org/TR/did-core/)      |
-| file:     | [RFC8089](https://tools.ietf.org/html/rfc8089)  |
-
-<br/>Registries:
-
-* [IANA URI schemes](https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml)
-* [IANA URN
-namespaces](https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml)
+- [IRIs](#iris)
+  - [Definition of URI syntax](#defn-uri-syntax)
+  - [Relative References](#relative-references)
+  - [Example](#example)
+  - [Notes about IRIs/URIs](#notes-iris)
+  - [Normalization](#normalization)
+- [HTTP](#http)
+- [URN](#urn)
+- [UUIDs](#uuid)
+- ["file" URI scheme](#file)
+- [RDF References](#rdf-references)
+- [Gotchas](#gotchas)
+- [Links](#links)
 
 ## IRIs
 
@@ -63,7 +60,7 @@ MAY contain a fragment identifier."
 As of [RFC 3986](https://tools.ietf.org/html/rfc3986), relative IRIs are called
 "relative references".
 
-### Definition of URI syntax
+### Definition of URI syntax {#defn-uri-syntax}
 
 In [RFC3986 section-4.1](https://tools.ietf.org/html/rfc3986#section-4.1)
 defines "URI".
@@ -137,7 +134,7 @@ the `"//" authority path-abempty` choice in `hier-part`.
 With [non-strict resolution](https://tools.ietf.org/html/rfc3986#section-5.2.2),
 and an valid HTTP base URI, the examples won't appear in RDF abstract syntax.
 
-### Notes about IRIs/URIs:
+### Notes about IRIs/URIs {#notes-iris}
 
 * Space (U+0200) is not legal in an IRI.
 * `@`, `~`, `(`, `)` and `:` are legal in the path, query and fragment components.
@@ -208,7 +205,7 @@ Hex digits should be lower case.
 There was a [proposal](https://tools.ietf.org/html/draft-kindel-uuid-uri-00) for
 a "uuid" scheme, it is is sometimes seen but it was only ever a draft. 
 
-## "file" URI scheme {#file]
+## "file" URI scheme {#file}
 
 The file URI scheme had for a long time been only loosely defined in
 [RFC 1738 section 3.10](https://tools.ietf.org/html/rfc1738#section-3.10).
@@ -224,7 +221,7 @@ when working with local files, for example using RDF for configuration files on 
 local machine. Such URIs will be of the form `file:///` (that is, 3 '/') using
 the file scheme convention that "localhost" can be dropped.
 
-## RDF References
+## RDF References {#rdf-references}
 
 It woudl be useful to pull all these considerations together into a distinct
 piece of terminolgy 
@@ -252,7 +249,7 @@ This can be tricky for the parser to check if it does not know the scheme.
 
 ## Gotchas
 
-In Trutle related synatxes, there are two places where "partial URIs" are used.
+In Turtle related synatxes, there are two places where "partial URIs" are used.
 
 ```
 PREFIX u: <urn:uuid:>
@@ -269,3 +266,23 @@ BASE <urn:>
 ```
 
 but `urn:` is not a legal URNs.
+
+## Links
+
+Links to relevant documents:
+
+|           | Defined by: |
+|-----------|-------------| 
+| URI       | [RFC 3986](https://tools.ietf.org/html/rfc3986) |
+| IRI       | [RFC 3987](https://tools.ietf.org/html/rfc3987) |
+| http:     | [RFC 7230](https://tools.ietf.org/html/rfc7230) |
+| urn:      | [RFC 8141](https://tools.ietf.org/html/rfc8141) |
+| urn:uuid: | [RFC 4122](https://tools.ietf.org/html/rfc4122) |
+| did:      | [W3C DID](https://www.w3.org/TR/did-core/)      |
+| file:     | [RFC8089](https://tools.ietf.org/html/rfc8089)  |
+
+<br/>Registries:
+
+* [IANA URI schemes](https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml)
+* [IANA URN
+namespaces](https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml)
