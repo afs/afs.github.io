@@ -235,7 +235,9 @@ That means after resolving against a base.
 It has a scheme name. It may have query and fragment parts. There is always a
 "path" even if it is the empty string.
 
-* It SHOULD NOT have a "userinfo@", the user-password part of authority (good practice).
+* It SHOULD NOT have a "userinfo@", the user-password part of authority.  
+  This is deprecated in 
+  [RFC 3986 section 3.2.1](https://tools.ietf.org/html/rfc3986#section-3.2.1).
 
 * It follows the additional restrictions of the URI scheme.
 
