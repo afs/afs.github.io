@@ -12,5 +12,11 @@ Places to go:
 * [RDF Thrift](/rdf-thrift/)<br/>
   A binary encoding for RDF and SPARQL Result Sets.
 
+Notes:
+
 * [RDF and IRI Syntax](rdf-iri-syntax.html)<br/>
   Practical notes on the details of IRIs/URIs.
+
+* [SPARQL Grouping and Aggregation with no 
+  matches](https://afs.github.io/sparql-agg-group-empty)<br/>
+  Details of SPARQL <tt>GROUP</tt> - <tt>COUNT</tt>.
