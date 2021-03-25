@@ -18,5 +18,12 @@ Notes:
   Practical notes on the details of IRIs/URIs.
 
 * [SPARQL Grouping and Aggregation with no 
-  matches](https://afs.github.io/sparql-agg-group-empty)<br/>
+  matches](sparql-agg-group-empty)<br/>
   Details of SPARQL <tt>GROUP</tt> - <tt>COUNT</tt>.
+
+* [Substitution of Variables in SPARQL](substitute.html)<br/>
+  Analysis and proposal for the process of substitution of 
+  values for variables.
+
+
+  
