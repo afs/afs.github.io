@@ -24,6 +24,3 @@ Notes:
 * [Substitution of Variables in SPARQL](substitute.html)<br/>
   Analysis and proposal for the process of substitution of 
   values for variables.
-
-
-  
