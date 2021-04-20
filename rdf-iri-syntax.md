@@ -235,13 +235,17 @@ That means after resolving against a base.
 It has a scheme name. It may have query and fragment parts. There is always a
 "path" even if it is the empty string.
 
-* It SHOULD NOT have a "userinfo@", the user-password part of authority.  
-  This is deprecated in 
-  [RFC 3986 section 3.2.1](https://tools.ietf.org/html/rfc3986#section-3.2.1).
+* It SHOULD NOT have a "user:password@", the user-password part of authority.  
+  This is deprecated in
+  [RFC 3986 section 3.2.1](https://tools.ietf.org/html/rfc3986#section-3.2.1)
+  and any "userinfo" is further restricted
+  [RFC 7230 section 2.7.1](https://tools.ietf.org/html/rfc7230#section-2.7.1).
 
 * It follows the additional restrictions of the URI scheme.
 
-This can be tricky for the parser to check if it does not know the scheme.
+This can be tricky for the parser to check if it does not know the scheme,
+but when generating URIs, the software generating a URI should follow the URI
+scheme.
 
 * The scheme-specific rules for http, https and urn schemes are required:
    * If 'http:' it follows the HTTP scheme rule: `http-URI`
