@@ -1,3 +1,7 @@
+Keep Jekyll up-to-date:
+"bundle update"
+
+
 Pure static site:
 
 Empty file ".nojekyll"
@@ -7,12 +11,10 @@ then HTML in /docs?
 
 -------------------
 
-"jekyll build"
+"bundle exec jekyll build"
 
-"jekyll server" -> localhost:4000
+"bundle exec jekyll server" -> localhost:4000
 
-Keep Jekyll up-to-date:
-"bundle update"
 
 Jekyll 2:
   For jekyll-coffeescript (required)
