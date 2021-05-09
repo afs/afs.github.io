@@ -8,7 +8,7 @@ uglyurls = true
 
 ignoreFiles = ["afs\\@desktop" , "^.#" ]
 ## contentDir = "content"
-## publishDir = "public"
+publishDir = "docs"
 
 [markup.goldmark.renderer]
 # Raw HTML
