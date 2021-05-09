@@ -1,4 +1,4 @@
-baseURL = "http://afs.github.io/"
+baseURL = "https://afs.github.io/"
 languageCode = "en-gb"
 title = "AFS"
 theme = "afs"
@@ -9,6 +9,8 @@ uglyurls = true
 ignoreFiles = ["afs\\@desktop" , "^.#" ]
 ## contentDir = "content"
 publishDir = "docs"
+
+disableKinds=["RSS"]
 
 [markup.goldmark.renderer]
 # Raw HTML

@@ -2,28 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://afs.github.io/</loc>
+    <loc>https://afs.github.io/</loc>
   </url><url>
-    <loc>http://afs.github.io/rdf-thrift/jena-rdf-thrift-api.html</loc>
+    <loc>https://afs.github.io/rdf-thrift/jena-rdf-thrift-api.html</loc>
   </url><url>
-    <loc>http://afs.github.io/categories.html</loc>
+    <loc>https://afs.github.io/categories.html</loc>
   </url><url>
-    <loc>http://afs.github.io/shacl-datasets.html</loc>
+    <loc>https://afs.github.io/shacl-datasets.html</loc>
   </url><url>
-    <loc>http://afs.github.io/rdf-iri-syntax.html</loc>
+    <loc>https://afs.github.io/rdf-iri-syntax.html</loc>
   </url><url>
-    <loc>http://afs.github.io/rdf-thrift/rdf-binary-thrift.html</loc>
+    <loc>https://afs.github.io/rdf-thrift/rdf-binary-thrift.html</loc>
   </url><url>
-    <loc>http://afs.github.io/rdf-thrift/</loc>
+    <loc>https://afs.github.io/rdf-thrift/</loc>
   </url><url>
-    <loc>http://afs.github.io/rdf-thrift.html</loc>
+    <loc>https://afs.github.io/rdf-thrift.html</loc>
   </url><url>
-    <loc>http://afs.github.io/sparql-agg-group-empty.html</loc>
+    <loc>https://afs.github.io/sparql-agg-group-empty.html</loc>
   </url><url>
-    <loc>http://afs.github.io/substitute.html</loc>
+    <loc>https://afs.github.io/substitute.html</loc>
   </url><url>
-    <loc>http://afs.github.io/tags.html</loc>
+    <loc>https://afs.github.io/tags.html</loc>
   </url><url>
-    <loc>http://afs.github.io/rdf-lists-sparql.html</loc>
+    <loc>https://afs.github.io/rdf-lists-sparql.html</loc>
   </url>
 </urlset>
