@@ -4,7 +4,7 @@ title: RDF and IRI Syntax
 ---
 <div class="docinfo">
      <p>Andy Seaborne</p>
-     <p>February, 2010</p>
+     <p>February, 2020</p>
 </div>
 
 RDF uses IRIs to refer to resources.
