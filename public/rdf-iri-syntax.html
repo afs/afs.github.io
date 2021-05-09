@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    
+    <title>RDF and IRI Syntax</title>
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+    	  rel="stylesheet"
+	  integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+	  crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+	    crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+</head>
+
+  <body><div id="content">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="pb-2 mt-4 mb-2">
+      	<h1>RDF and IRI Syntax</h1>
+      </div> 	
+      <div class="docinfo">
+     <p>Andy Seaborne</p>
+     <p>February, 2020</p>
+</div>
+<p>RDF uses IRIs to refer to resources.</p>
+<p>This page pulls together the syntax requirements for IRIs into one place. There
+are several documents, mostly RFCs, that define IRIs and specific IRI
+schemes. Getting IRIs right means data is more likely to be readable by
+other systems when the data is published.</p>
+<p>Just because an IRI passes all the syntax rules, it does not make it a good choice.</p>
+<p>URIs are defined by <a href="https://tools.ietf.org/html/rfc3986%5D">RFC 3986</a> and
+IRIs in the companion <a href="https://tools.ietf.org/html/rfc3987%5D">RFC 3987</a> which
+gives the modifications necessary for the wider range of
+Unicode characters in URIs.</p>
+<p>URI schemes can add constraints on the URI syntax; for example, <a href="https://tools.ietf.org/html/rfc7230">RFC
+7230</a> defines the http and https shemes.</p>
+<p>This article introduces the terminology &lsquo;RDF Reference&rsquo; to put all the
+implications into one definition.</p>
+<h2 id="toc">TOC</h2>
+<ul>
+<li><a href="#iris">IRIs</a>
+<ul>
+<li><a href="#defn-uri-syntax">Definition of URI syntax</a></li>
+<li><a href="#relative-references">Relative References</a></li>
+<li><a href="#example">Example</a></li>
+<li><a href="#notes-iris">Notes about IRIs/URIs</a></li>
+<li><a href="#normalization">Normalization</a></li>
+</ul>
+</li>
+<li><a href="#http">HTTP</a></li>
+<li><a href="#urn">URN</a></li>
+<li><a href="#uuid">UUIDs</a></li>
+<li><a href="#file">&ldquo;file&rdquo; URI scheme</a></li>
+<li><a href="#rdf-references">RDF References</a></li>
+<li><a href="#gotchas">Gotchas</a></li>
+<li><a href="#links">Links</a></li>
+</ul>
+<h2 id="iris">IRIs</h2>
+<p>This article will use URI and IRI interchangeably.
+&ldquo;<a href="https://www.w3.org/TR/rdf11-concepts/#note-iris">IRIs are a generalization of URIs that permits a wider range of
+Unicode characters.</a>&rdquo;</p>
+<p>The <a href="https://www.w3.org/TR/rdf11-concepts/#section-IRIs">RDF Concepts document</a> says:</p>
+<blockquote>
+<p>&ldquo;IRIs in the RDF abstract syntax MUST be absolute, and
+MAY contain a fragment identifier.&rdquo;</p>
+</blockquote>
+<blockquote>
+<p>&ldquo;Relative IRIs must be resolved against a base IRI to make them absolute.&rdquo;</p>
+</blockquote>
+<p>As of <a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a>, relative IRIs are called
+&ldquo;relative references&rdquo;.</p>
+<h3 id="defn-uri-syntax">Definition of URI syntax</h3>
+<p>In <a href="https://tools.ietf.org/html/rfc3986#section-4.1">RFC3986 section-4.1</a>
+defines &ldquo;URI&rdquo;.</p>
+<p>A &ldquo;URI&rdquo; is URI-reference after it has been resolved.</p>
+<p>The relevant part of the grammar in
+<a href="https://tools.ietf.org/html/rfc3986#appendix-A">RFC3986 appendix-A</a>
+is:</p>
+<pre><code>   absolute-URI  = scheme &quot;:&quot; hier-part [ &quot;?&quot; query ]
+
+   URI           = scheme &quot;:&quot; hier-part [ &quot;?&quot; query ] [ &quot;#&quot; fragment ]
+
+   hier-part     = &quot;//&quot; authority path-abempty
+                 / path-absolute
+                 / path-rootless
+                 / path-empty
+</code></pre><p>We&rsquo;ve already got to one important point - an <em>absolute URI</em>. An absolute URI has
+a URI scheme, and does not have a fragment.</p>
+<p>An absolute URI with a fragment is just &ldquo;URI&rdquo;.</p>
+<p>What we want is the full URI rule and also require it uses the &ldquo;// authority&rdquo;
+rule if a scheme involves that component.</p>
+<p>Specifc URI schemes can add additional requirments.
+HTTP (<a href="https://tools.ietf.org/html/rfc7230">RFC 7230</a>)
+requires an http URI to have the part <code>&quot;//&quot; authority</code>;
+the urn scheme does not have an authority.</p>
+<p>URN (<a href="https://tools.ietf.org/html/rfc8141">RFC 8141</a>) does not have an authority
+part - it uses the <code>path-rootless</code> production. It does additionally require the
+path to have two colons, the NID part must be at
+least two characters, and the NSS part at least one character.</p>
+<h3 id="relative-references">Relative References</h3>
+<p>RDF syntax may use
+<a href="https://www.w3.org/TR/rdf11-concepts/#dfn-relative-iri">relative references</a>.
+The process of parsing of a document means that any
+relative reference is converted to an URI to ensure it identifies the same
+resource everywhere. This is called resolving against a base URI -
+<a href="https://tools.ietf.org/html/rfc3986#section-5">there is always a base</a>.</p>
+<p>Relative references are short cuts, for the full URI after resolving
+against the base.</p>
+<p>By the time they get to RDF abstrat syntax (the datastructure), relative
+references should have been converted.</p>
+<h3 id="example">Example</h3>
+<p>By the definitions in RFC 3986:</p>
+<pre><code>    http:abcd
+    http:/abcd
+</code></pre><p>are absolute URIs - it has a URI scheme, it does not have a fragment.</p>
+<p>But it is not an &ldquo;<a href="#http">http-URI</a>&rdquo; which is defined in
+<a href="https://tools.ietf.org/html/rfc7230#section-2.7.1">RFC7230 sec 2.7.1</a>
+because http-URI defines additional syntax requirements. An http-URI requires
+the <code>&quot;//&quot; authority path-abempty</code> choice in <code>hier-part</code>.</p>
+<p>With <a href="https://tools.ietf.org/html/rfc3986#section-5.2.2">non-strict resolution</a>,
+and an valid HTTP base URI, the examples won&rsquo;t appear in RDF abstract syntax.</p>
+<h3 id="notes-iris">Notes about IRIs/URIs</h3>
+<ul>
+<li>Space (U+0200) is not legal in an IRI.</li>
+<li><code>@</code>, <code>~</code>, <code>(</code>, <code>)</code> and <code>:</code> are legal in the path, query and fragment components.</li>
+<li><code>{</code> and <code>}</code> are not legal in IRIs.</li>
+<li><code>[</code> and <code>]</code> are only legal as IPv6 address delimiters.</li>
+<li>Encoding with &ldquo;%hex&rdquo; is not an escape mechanism. <code>%20</code> puts three characters into
+the IRI: <code>%</code>, <code>2</code>, <code>0</code>.</li>
+</ul>
+<h3 id="normalization">Normalization</h3>
+<p>Normalization of the syntax
+(<a href="https://tools.ietf.org/html/rfc3986#section-6.2.2">RFC 3998, section 6.2.2</a>
+gives some simple rules to make it easier to compare URIs as strings.</p>
+<p>By the URI syntax the two characters after <code>%</code>
+must be legal hex digits (<code>%ST</code> is a syntax error).
+Normalization prefers the letters &ldquo;A-F&rdquo; to be uppercase.</p>
+<h2 id="http">HTTP</h2>
+<p><a href="https://tools.ietf.org/html/rfc7230#section-2.7.1">RFC7230 sec 2.7.1</a></p>
+<pre><code>  http-URI = &quot;http:&quot; &quot;//&quot; authority path-abempty [ &quot;?&quot; query ] [ &quot;#&quot; fragment ]
+</code></pre><p>so the http URI scheme adds a requirement that there must be a &ldquo;//&rdquo; and
+authority (host and port), followed by an absolute path (starts with &ldquo;/&quot;) or is
+absent (empty string, no &ldquo;/&quot;).</p>
+<h2 id="urn">URN</h2>
+<p>The
+<a href="https://tools.ietf.org/html/rfc8141#section-2">syntax of the urn URI scheme</a></p>
+<pre><code>      assigned-name = &quot;urn&quot; &quot;:&quot; NID &quot;:&quot; NSS
+      NID           = (alphanum) 0*30(ldh) (alphanum)
+      ldh           = alphanum / &quot;-&quot;
+      NSS           = pchar *(pchar / &quot;/&quot;)
+</code></pre><p>The older <a href="https://tools.ietf.org/html/rfc2141">RFC 2141</a> allowed &ldquo;X-&hellip;&rdquo; as NID.</p>
+<p>While a URN allows <code>r-component</code>, <code>q-component</code> and <code>f-component</code>, the latter
+being a URI fragment, usually it is just the <code>assigned-name</code> form used for
+resource identification.</p>
+<p>The urn scheme only applies to ASCII, not the addition characters of IRIs.</p>
+<p>An NID must be at least 2 characters, and the first and last must be
+alphanumeric.</p>
+<p>A NSS must be at least one character.</p>
+<p>It is not uncommon to see <code>urn:x:...</code> in test data - unfortunately, that isn&rsquo;t a
+legal URI in the urn scheme because the &ldquo;x&rdquo; is the NID part and is too short.</p>
+<p>By the general URI syntax, the URI path component is the &ldquo;NID:NSS&rdquo; part of the URN.</p>
+<h2 id="uuid">UUIDs</h2>
+<p>The correct way to use UUIDs
+(<a href="https://tools.ietf.org/html/rfc4122#section-3">RFC 4122</a>)
+is <code>urn:uuid:0e5f5ff6-6c80-4786-84b9-4c121bb3ae9e</code>.
+Hex digits should be lower case.</p>
+<p>There was a <a href="https://tools.ietf.org/html/draft-kindel-uuid-uri-00">proposal</a> for
+a &ldquo;uuid&rdquo; scheme, it is is sometimes seen but it was only ever a draft.</p>
+<h2 id="file">&ldquo;file&rdquo; URI scheme</h2>
+<p>The file URI scheme had for a long time been only loosely defined in
+<a href="https://tools.ietf.org/html/rfc1738#section-3.10">RFC 1738 section 3.10</a>.
+Common usage was beyond the definition; character set issues were unclear.</p>
+<p><a href="https://tools.ietf.org/html/rfc8089">RFC 8089</a> is a formal defintion compatible
+with the URI syntax for RFC 3986.  It includes common usage such as relative
+filenames (relative to their point of use), for example
+<code>file:directory/file.txt</code>, can be used.</p>
+<p>While for RDF the file schema is of limited use, the file URI scheme is useful
+when working with local files, for example using RDF for configuration files on the
+local machine. Such URIs will be of the form <code>file:///</code> (that is, 3 &lsquo;/') using
+the file scheme convention that &ldquo;localhost&rdquo; can be dropped.</p>
+<h2 id="rdf-references">RDF References</h2>
+<p>It woudl be useful to pull all these considerations together into a distinct
+piece of terminolgy</p>
+<p>&ldquo;RDF References&rdquo;:</p>
+<ul>
+<li>It is a URI</li>
+</ul>
+<p>That means after resolving against a base.</p>
+<p>It has a scheme name. It may have query and fragment parts. There is always a
+&ldquo;path&rdquo; even if it is the empty string.</p>
+<ul>
+<li>
+<p>It SHOULD NOT have a &ldquo;user:password@&rdquo;, the user-password part of authority.<br>
+This is deprecated in
+<a href="https://tools.ietf.org/html/rfc3986#section-3.2.1">RFC 3986 section 3.2.1</a>
+and any &ldquo;userinfo&rdquo; is further restricted
+<a href="https://tools.ietf.org/html/rfc7230#section-2.7.1">RFC 7230 section 2.7.1</a>.</p>
+</li>
+<li>
+<p>It follows the additional restrictions of the URI scheme.</p>
+</li>
+</ul>
+<p>This can be tricky for the parser to check if it does not know the scheme,
+but when generating URIs, the software generating a URI should follow the URI
+scheme.</p>
+<ul>
+<li>
+<p>The scheme-specific rules for http, https and urn schemes are required:</p>
+<ul>
+<li>If &lsquo;http:&rsquo; it follows the HTTP scheme rule: <code>http-URI</code></li>
+<li>If &lsquo;urn:&rsquo;, it matches the requirment for &ldquo;urn:2+chars:1+char&rdquo;</li>
+</ul>
+</li>
+<li>
+<p>Hex in %-encoding SHOULD be uppercase.</p>
+</li>
+</ul>
+<h2 id="gotchas">Gotchas</h2>
+<p>In Turtle related synatxes, there are two places where &ldquo;partial URIs&rdquo; are used.</p>
+<pre><code>PREFIX u: &lt;urn:uuid:&gt;
+
+u:66d5b9e2-5abe-49be-bfc9-1ed0d997e07f
+</code></pre><p>but <code>urn:uuid:</code> is not a legal URN.</p>
+<pre><code>BASE &lt;urn:&gt;
+
+## Resolves to urn:uuid:66d5...
+&lt;uuid:66d5b9e2-5abe-49be-bfc9-1ed0d997e07f&gt;
+</code></pre><p>but <code>urn:</code> is not a legal URNs.</p>
+<h2 id="links">Links</h2>
+<p>Links to relevant documents:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Defined by:</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URI</td>
+<td><a href="https://tools.ietf.org/html/rfc3986">RFC 3986</a></td>
+</tr>
+<tr>
+<td>IRI</td>
+<td><a href="https://tools.ietf.org/html/rfc3987">RFC 3987</a></td>
+</tr>
+<tr>
+<td>http:</td>
+<td><a href="https://tools.ietf.org/html/rfc7230">RFC 7230</a></td>
+</tr>
+<tr>
+<td>urn:</td>
+<td><a href="https://tools.ietf.org/html/rfc8141">RFC 8141</a></td>
+</tr>
+<tr>
+<td>urn:uuid:</td>
+<td><a href="https://tools.ietf.org/html/rfc4122">RFC 4122</a></td>
+</tr>
+<tr>
+<td>did:</td>
+<td><a href="https://www.w3.org/TR/did-core/">W3C DID</a></td>
+</tr>
+<tr>
+<td>file:</td>
+<td><a href="https://tools.ietf.org/html/rfc8089">RFC8089</a></td>
+</tr>
+</tbody>
+</table>
+<p><br/>Registries:</p>
+<ul>
+<li><a href="https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml">IANA URI schemes</a></li>
+<li><a href="https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml">IANA URN
+namespaces</a></li>
+</ul>
+
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+
+    </div></body>
+</html>

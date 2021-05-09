@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rdf-thrifts on AFS</title>
+    <link>http://afs.github.io/rdf-thrift.html</link>
+    <description>Recent content in Rdf-thrifts on AFS</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language><atom:link href="http://afs.github.io/rdf-thrift/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Apache Jena implementation of RDF Binary</title>
+      <link>http://afs.github.io/rdf-thrift/jena-rdf-thrift-api.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://afs.github.io/rdf-thrift/jena-rdf-thrift-api.html</guid>
+      <description>RDF Thrift has been incorporated into Apache Jena, from version 2.12.1.
+Comand line The riot command has an output format argument:
+riot --out=TRDF data.nt &amp;gt; data.trdf  Graphs and Datasets Use RDFDataMgr operations.
+Read a graph:
+Model m = RDFDataMgr.loadModel(&amp;quot;data.trdf&amp;quot;) ;  Write a model:
+RDFDataMgr.write(System.out, m, Lang.RDFTHRIFT) ;  and other RDFDataMgr operations.
+Reading using RDFDataMgr is preferred. model.read operations may not detect the file syntax.
+SPARQL Result Sets ResultSet resultSet = ResultSetMgr.</description>
+    </item>
+    
+    <item>
+      <title>RDF Binary encoding using Thrift</title>
+      <link>http://afs.github.io/rdf-thrift/rdf-binary-thrift.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://afs.github.io/rdf-thrift/rdf-binary-thrift.html</guid>
+      <description>Binary RDF is useful for efficient processing and transfer rather than relying on text-based formats. Text based formats are more expensive to write and to parse.
+The text oriented syntaxes (e.g. Turtle) provide human readability while the line-oriented syntaxes (e.g. N-Triples provide reasonable universal dump and machine exchange formats on the web. N-triples, despite being larger than Turtle, is generally reported to be faster to parse.
+Apache Thrift, and Google&amp;rsquo;s Protocol Buffers are data formats designed for efficient exchange of data between co-operating processes.</description>
+    </item>
+    
+    <item>
+      <title>RDF Binary using Apache Thrift</title>
+      <link>http://afs.github.io/rdf-thrift/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://afs.github.io/rdf-thrift/</guid>
+      <description>RDF Binary using Apache Thrift (&amp;ldquo;RDF Thrift&amp;rdquo;) is a binary format for RDF and RDF-related data.
+The W3C standard RDF syntaxes are text or XML based. These incur costs in parsing; the most human-readable formats also incur high costs to write, and have limited scalability due to the need to analyse the data for pretty printing rather than simply stream to output.
+N-Triples or N-Quads are often used for datastore dump formats and for publishing large datasets because they have been found to be the best formats to read and write for this usages.</description>
+    </item>
+    
+  </channel>
+</rss>

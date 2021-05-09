@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    
+    <title>Apache Jena implementation of RDF Binary</title>
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+    	  rel="stylesheet"
+	  integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+	  crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+	    crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+</head>
+
+  <body><div id="content">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="pb-2 mt-4 mb-2">
+      	<h1>Apache Jena implementation of RDF Binary</h1>
+      </div> 	
+      <p>RDF Thrift has been incorporated into <a href="http://jena.apache.org/">Apache Jena</a>, from version 2.12.1.</p>
+<h2 id="comand-line">Comand line</h2>
+<p>The <code>riot</code> command has an output format argument:</p>
+<pre><code>riot --out=TRDF data.nt &gt; data.trdf
+</code></pre>
+<h2 id="graphs-and-datasets">Graphs and Datasets</h2>
+<p>Use <code>RDFDataMgr</code> operations.</p>
+<p>Read a graph:</p>
+<pre><code>Model m = RDFDataMgr.loadModel(&quot;data.trdf&quot;) ;
+</code></pre>
+<p>Write a model:</p>
+<pre><code>RDFDataMgr.write(System.out, m, Lang.RDFTHRIFT) ;
+</code></pre>
+<p>and other <code>RDFDataMgr</code> operations.</p>
+<p>Reading using <code>RDFDataMgr</code> is preferred.  <code>model.read</code> operations may not detect
+the file syntax.</p>
+<h2 id="sparql-result-sets">SPARQL Result Sets</h2>
+<pre><code>ResultSet resultSet =  ResultSetMgr.read(inputStream, ResultSetLang.SPARQLResultSetThrift) ;
+
+ResultSetMgr.write(outputStream, resultSet,  ResultSetLang.SPARQLResultSetThrift) ;
+</code></pre>
+<h2 id="experimentation">Experimentation</h2>
+<p>If you want to access the code for the Thrift encoding, see the classes:</p>
+<ul>
+<li><code>BinRDF</code> &ndash; the read and write operations.</li>
+<li><code>ThriftConvert</code> &ndash; conversion to and from Thrift datastructures.</li>
+<li><code>TRDF</code> &ndash; support code for handling Thrift I/O (e.g. <code>TProtocol</code>).</li>
+</ul>
+
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+
+    </div></body>
+</html>

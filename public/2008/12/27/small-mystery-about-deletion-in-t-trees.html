@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>A small mystery about deletion in T-Trees</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" type="text/css" href="/css/custom.css">
+
+</head>
+
+
+<body>
+  
+  <div class="container-fluid">
+
+    <div class="pb-2 mt-4 mb-2">
+      <h1>A small mystery about deletion in T-Trees</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-9">
+        
+      <p><a href="http://en.wikipedia.org/wiki/T-tree">T-Trees</a> are a generalisation of <a href="http://en.wikipedia.org/wiki/AVL_tree">AVL trees</a>.  They are useful for in-memory databases because they have better packing densities than AVL trees and need less rotations.  They provide a sorted index (so they are not good as the only index structure in an in-memory RDF store). This posting is only loosely triple store or SPARQL related.</p>
+
+<p>The paper &quot;<a href="http://www.vldb.org/conf/1986/P294.PDF">A Study of Index Structures for Main Memory Database Management Systems</a>&quot; (Tobin J. Lehman and Michael J. Carey, VLDB 1986) has the details.</p>
+
+<p>T-Trees keep an array of items per tree node (usually a short array) and have 3 pointers and 2 integers per tree node stored as opposed to 3 pointers, 1 number per single item stored for AVL. (both can be done with 2 pointers, with no parent but it&#39;s more complicated and the code has to run it&#39;s own stack to record it&#39;s path through the tree).  Make the array a few entries long, and a T-Tree is a bit more more compact; rotations only happen when the tree structure after a leaf-array fills up.</p>
+
+<p>I understand these algorithms in depth if I code them up.  My implementation of T-Trees which includes consistency checking because I find it easier to write data structure algorithms this way - lots of internal checking, lots of test cases and then move to large scale randomized insertion and deletion patterns because I don&#39;t trust myself to enumerate all possibilities in a hand-written test suite.  Run the randomized tests for a few million iterations checking the structure for internal consistency constraints on every insertions and deletion.  Then disable (but don&#39;t remove!) the checking code, and rely on the fact that &quot;if (false)&quot; compiles to nothing in Java and statics tend to get in-lined by the JIT.</p>
+
+<p>But one area is puzzling me.  The mystery, to me, is in the delete algorithm.  One feature of a T-Tree is that the internal nodes (internal nodes have both a left and right subtree) should always be larger than some minimum amount.</p>
+
+<p>The delete algorithm, from the paper, is (section 3.2.1):</p>
+
+<BLOCKQUOTE style="font-family: 'times new roman'">
+<p>3) Delete Algorithm
+
+</p>
+
+<p>The deletion algorithm is similar to the insertion algorithm in the sense that the element to be deleted is searched for, the operation is performed, and then re-balancing is done if necessary. The algorithm works as follows:
+
+</p>
+
+<ol>
+<li>Search for the node that bounds the delete value. Search for the delete value within this node, reporting an error and stopping if it is not found.</li>
+
+<li>If the delete will not cause an underflow (i.e. if the node has more than the minimum allowable number of entries prior to the delete), then simply delete the value and stop; else, if this is an internal node, then delete the value and borrow the greatest lower bound of this node from a leaf or half-leaf to bring this node’s element count back up to the minimum; else, this is a leaf or a half-leaf, so just delete the element. (Leaves are permitted to underflow, and half-leaves are handled in step 3.</li>
+
+<li>If the node is a half-leaf and can be merged with a leaf, coalesce the two nodes into one node (a leaf) and discard the other node. Proceed to step 5.</li>
+
+<li>If the current node (a leaf) is not empty, then stop; else, free the node and proceed to step 5 to re-balance the tree.</li> 
+
+<li>For every node along the path from the leaf up to the root, if the two subtrees of the node differ in height by more than one, perform a rotation operation. Since a rotation at one node may create an imbalance for a node higher up in the tree, balance-checking for deletion must examine all of the nodes on the search path until a node of even balance is discovered.</li>
+</ol>
+</BLOCKQUOTE>
+
+<p>But what if a half-leaf, a node with just one sub-node as a leaf, becomes less than the minimum size of a node, yet can not be merged with it&#39;s leaf?  The t-tree is still valid - the size constraint is on internal nodes only.  But a half-leaf can be become an internal node by a rotation of the tree.  So our less-than-min-sized half-leaf can become an invalid internal node and the constraint on internal nodes is validated.
+
+</p>
+
+<p>Several possible solutions ocurr to me (and probably more than just these):
+
+</p>
+
+<ul>
+<li> Just don&#39;t worry (works for me because I&#39;m expecting insertion if much more important in the any usage I might make of the T-Tree implementation).  The internal node that was too small may become larger due to a later insertion.  But my internal consistency checking code is now weakened because there is a condition on internal nodes that is no longer always true.</li>
+
+<li>Treat a half-leaf more like an internal node with respect to deletion and pull up an entry from its leaf to keep the half-leaf at the minimum size. If the half-leaf has a left-leaf, this is the same as the rule for deletion in an internal node.  If the half-leaf has a right-leaf, the lowest element of the leaf is required, which is a shift down of all the other elements in the leaf so is less than ideal.</li>
+
+<li>Have special code in the rotation operations to move elements around when rotating a half-leaf into an internal node position.  This is like possibility 2, except delaying it until it is know it will cause an invalid internal node.  T-Trees already have a special case rotation on insertion anyway.</li>
+</ul>
+
+<p>I choose the second way for now - fix up during deletion - because the checking code can now check half-leaves as well as internal nodes for size constraints, so catching problems earlier in some insert/delete sequence.
+
+</p>
+
+<p>A search of the web does not find any mention of this - most web pages are either a copy of the wikipedia page or reference the original paper.
+
+</p>
+
+<p>If anyone can help me out with this, then please leave a comment or get in touch.  I&#39;d be surprised if it isn&#39;t that I&#39;m missing something obvious (T-Trees are not new) but the situation of a small half-leaf becoming an internal node does occur as I found from the randomized testing.
+
+</p>     
+
+    </div>
+
+    <div class="col-md-2"></div>
+
+  </div>
+
+</div>
+
+
+  
+</body>
+</html>

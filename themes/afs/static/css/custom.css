@@ -1,0 +1,108 @@
+/* Fonts loaded in head.html
+        //fonts.googleapis.com/css?family=Open+Sans:300,400,600,300italic,400italic
+        //fonts.googleapis.com/css?family=Roboto:300,500,300italic,500italic
+*/
+
+body { font-family: "Muli", "Open Sans", sans-serif ; 
+       font-size:   15px ;
+       font-weight: 300 ;
+       line-height: 25px;
+       color:       #404040 ;
+}
+
+/*
+body { font-family: "Roboto", sans-serif ; 
+       font-size:   15px ;
+       font-weight: 300 ;
+       line-height: 25px;
+       color:       #404040 ;
+}
+*/
+
+/* From bootstrap: */
+/*
+page-header {
+    padding-bottom: 9px;
+    margin: 40px 0 20px;
+    border-bottom: 1px solid #eee;
+}
+*/
+
+/* Override bootstrap */
+.page-header {
+  border-bottom: none;
+}
+
+.docinfo {
+    margin-bottom :   30px;
+    margin-top :      -10px;
+    margin-left :     10% ;
+}
+
+a         { color : #0000C0 ; text-decoration: none ;}
+a:hover   { text-decoration: underline ; }
+a:visited { color : #000080 ; }
+
+h1 { font-size: 32px ; font-weight: bold ; }
+h2 { font-size: 24px ; font-weight: bold ; }
+h3 { font-size: 18px ; font-weight: bold ; }
+
+code { font-family: "Inconsolata" ; color: black ; background-color: #F0F0F0 ; }
+pre {
+  font-family: "Inconsolata" ;
+  margin-left: 20px;
+  margin-right: 5%;
+}
+
+
+pre code { white-space: pre; overflow: auto; }
+
+.box {
+  margin-left :     5% ;
+  margin-right :    5% ;
+  line-height :     18px ;
+  border:           solid ;
+  background-color: #F0F0F0;
+  color:            black;
+  padding:          2mm;
+  page-break-inside: avoid ;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+blockquote {
+  font-size: 14px ;
+  color: #888 ;
+  font-style: italic ;
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  border-left: 5px solid #eee;
+}
+
+table tr td,th {
+  vertical-align: top;
+  border-right: 1px dotted #A0A0A0;
+  border-top: 1px dotted #A0A0A0;
+  padding-left: 2em ;
+  padding-right: 2em ;
+  padding: 0.3em;
+}
+
+table {
+  border: 1px solid #A0A0A0 ;
+  border-spacing: 0;
+  margin-left: 20px;
+}
+
+table th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  background-color: #ededee;
+}
+
+/* Don't print link hrefs */
+@media print {
+  a[href]:after {
+    content: none
+  }
+}

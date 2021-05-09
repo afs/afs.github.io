@@ -1,0 +1,15 @@
+baseURL = "http://afs.github.io/"
+languageCode = "en-gb"
+title = "AFS"
+theme = "afs"
+
+## page.html
+uglyurls = true
+
+ignoreFiles = ["afs\\@desktop" , "^.#" ]
+## contentDir = "content"
+## publishDir = "public"
+
+[markup.goldmark.renderer]
+# Raw HTML
+unsafe= true

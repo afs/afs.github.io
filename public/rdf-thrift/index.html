@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    
+    <title>RDF Binary using Apache Thrift</title>
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+    	  rel="stylesheet"
+	  integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+	  crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+	    crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+</head>
+
+  <body><div id="content">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="pb-2 mt-4 mb-2">
+      	<h1>RDF Binary using Apache Thrift</h1>
+      </div> 	
+      <p>RDF Binary using Apache Thrift (&ldquo;RDF Thrift&rdquo;) is a binary format
+for RDF and RDF-related data.</p>
+<p>The W3C standard RDF syntaxes are text or XML based.  These incur costs in
+parsing; the most human-readable formats also incur high costs to write, and
+have limited scalability due to the need to analyse the data for pretty
+printing rather than simply stream to output.</p>
+<p><a href="http://www.w3.org/TR/n-triples/">N-Triples</a> or
+<a href="http://www.w3.org/TR/n-quads/">N-Quads</a> are often used for datastore dump
+formats and for publishing large datasets because they have been found to
+be the best formats to read and write for this usages.  Yet these are still
+text formats.</p>
+<p>SPARQL result sets have a number of related syntaxes, based on
+<a href="http://www.w3.org/TR/sparql11-results-json/">using JSON</a>,
+<a href="http://www.w3.org/TR/rdf-sparql-XMLres/">using XML</a>, or
+<a href="http://www.w3.org/TR/sparql11-results-csv-tsv/">using TSV or CSV</a>.
+Again, these are text-based formats.</p>
+<p>Binary formats are faster to process - they do not incur the parsing costs of text-base
+formats.  &ldquo;RDF Thrift&rdquo; defines basic encoding for RDF terms then builds
+data formats for RDF graphs, RDF datasets and for SPARQL result sets.
+This gives a basis for high-performance linked data systems.</p>
+<p><a href="http://thrift.apache.org/">Apache Thrift</a> provides a efficient,
+wide-used binary encoding layer with a large number of language bindings.
+(Thrift also provides a cross-language, service interaction model on top of this
+encoding layer - this is not used here.)</p>
+<ul>
+<li>
+<p>Format description: <a href="rdf-binary-thrift.html">RDF Binary encoding using Thrift</a>.</p>
+</li>
+<li>
+<p>Known implementations:</p>
+<ul>
+<li>Apache Jena: <a href="https://jena.apache.org/documentation/io/rdf-binary.html">Jena API to RDF Trift</a>.</li>
+</ul>
+</li>
+</ul>
+<p>Document license: <a href="LICENSE.txt">Apache License</a> .</p>
+
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+
+    </div></body>
+</html>

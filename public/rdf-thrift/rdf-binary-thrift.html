@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    
+    <title>RDF Binary encoding using Thrift</title>
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+    	  rel="stylesheet"
+	  integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+	  crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+	    crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+</head>
+
+  <body><div id="content">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="pb-2 mt-4 mb-2">
+      	<h1>RDF Binary encoding using Thrift</h1>
+      </div> 	
+      <p>Binary RDF is useful for efficient processing and transfer rather than relying
+on text-based formats.  Text based formats are more expensive to write and to
+parse.</p>
+<p>The text oriented syntaxes
+(e.g. <a href="http://www.w3.org/TR/turtle/">Turtle</a>) provide human readability
+while the line-oriented syntaxes
+(e.g. <a href="http://www.w3.org/TR/n-triples/">N-Triples</a> provide reasonable
+universal dump and machine exchange formats on the web.  N-triples, despite
+being larger than Turtle, is generally reported to be faster to parse.</p>
+<p><a href="http://thrift.apache.org/">Apache Thrift</a>, and Google&rsquo;s
+<a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a> are
+data formats designed for efficient exchange of data between co-operating
+processes. This data exchange may be via disk or network.  The formats are
+design for efficient processing and not human readability.</p>
+<p>RDF Binary is a uses <a href="http://thrift.apache.org/">Apache Thrift</a> for a binary
+encoding for fast machine encoding and decoding.
+<a href="http://thrift.apache.org/">Apache Thrift</a> provides libraries for reading
+and writing the encoding in a wide variety of programming languages.</p>
+<h2 id="rdf-terms">Extended RDF Terms</h2>
+<p>The datastructures of graph/datasets and
+SPARQL result sets (e.g. <a href="http://www.w3.org/TR/sparql11-results-json/">in JSON</a>)
+build on <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-term">RDF Terms</a>.
+RDF Thrift defines RDF Terms in Thrift and
+adds some forms to give a single set of basic building blocks.</p>
+<ul>
+<li>RDF Terms &ndash; IRIs, literals and blank nodes</li>
+<li>Prefixed names &ndash; shortened IRIs for compression. See prefixed names in Turtle or SPARQL.</li>
+<li>Named variables (as in SPARQL)</li>
+<li><code>ANY</code> &ndash; a wildcard often found in RDF APIs for finding triples etc.</li>
+<li><code>UNDEF</code> &ndash; explicit indication that something does not have a value (e.g. for SPARQL results).</li>
+</ul>
+<p>A possible future (meta) term is</p>
+<ul>
+<li><code>REPEAT</code> &ndash; a marker to indicate the same term is to be used as the previous &ldquo;row&rdquo;</li>
+</ul>
+<p>In addition, there is a way to declare a prefix and the associated IRI.</p>
+<p>These basic elements are used for</p>
+<ul>
+<li>triples and quads for graphs and datasets</li>
+<li>rows of values, for SPARQL result sets</li>
+</ul>
+<p>This makes for reuse of code to process these different datastructures and simplicity,
+efficiency and easy of implementation with the assumption that each datastructure
+built on top is careful about erroneous use of these elements.</p>
+<h3 id="prefix-decl">Prefix Declarations</h3>
+<p>Prefix declarations can be inserted at any point where a triple or quad is expected
+and apply from that the end of the declaration in the data stream.</p>
+<h2 id="graphs-datasets">Graphs and Datasets</h2>
+<pre><code>Content type: application/rdf+thrift
+File extensions: rt, trdf
+</code></pre>
+<ul>
+<li>Triple (3 RDF terms)</li>
+<li>Quad (4 RDF terms)</li>
+<li>Prefix declaration.</li>
+</ul>
+<p>A graph is a stream comprised only of prefix declarations and triples.</p>
+<p>A dataset is a stream comprised only of prefix declarations, triples and quads.
+(A triple is in the default graph; quads go into named graphs.)</p>
+<p>This format is like N-Triples and N-Quads, except encoded in binary,
+and with prefixed names as a way to write IRIs.  This means the prefix declarations
+travel with the triples and quads as they do with Turtle and TriG.</p>
+<p>Prefix declarations can be inserted at any point where a triple or quad is expected
+and apply from that the end of the declaration in the data stream.</p>
+<h2 id="sparql-result-sets">SPARQL Result Set</h2>
+<pre><code>Content type: application/sparql-results+thrift
+File extensions: srt
+</code></pre>
+<ul>
+<li>Header row: a list of variables.</li>
+<li>Data row: a list of RDF terms to match the header.</li>
+<li>Prefix declaration.</li>
+</ul>
+<p>A SPARQL Result Set has one row of variables (the header row) and
+zero or more rows of data rows. The header row is mandatory.</p>
+<p>All data rows are the same length as the header row.</p>
+<p>Prefix declarations can be inserted at any point where a row is expected
+and apply from that the end of the declaration in the data stream.</p>
+<p>A data row uses <code>UNDEF</code> to indicate that a variable not set in the result set for this</p>
+<p>In addition, a data row may use the term <code>REPEAT</code> to indicate that the same
+RDF term from the previous row is used again.  <code>REPEAT</code> is illegal in the
+first data row.</p>
+<p>(<code>REPEAT</code> subject to deployment testing that it does provide useful data reduction.)</p>
+<h2 id="thrift-encoding">Details of Thrift Encoding</h2>
+<p>This section details the encoding in Thrift.</p>
+<h3 id="encoding-numerical-values">Encoding values</h3>
+<p>Use of encoding literals by value is optional.</p>
+<p>Some literals can be encoded using their values, rather than their lexical
+form and datatype.  This can lead to a reduction is space.  It can result
+in the changes to the term encoded.</p>
+<p>The exact lexcial form is not retained, so <code>&quot;001&quot;^^xsd:integer</code>,
+<code>&quot;+1&quot;^^xsd:integer</code> and <code>&quot;1&quot;^^xsd:integer</code> are all encoded as the value <code>1</code>
+and when read, will result in the same RDF term (<code>&quot;1&quot;^^xsd:integer</code>
+is the XSD canonical form).</p>
+<p>Some derived dataypes are lost - <code>xsd:long</code>, <code>xsd:int</code>, <code>xsd:short</code>,
+<code>xsd:byte</code> are encoded as their integer value and will become <code>xsd:integer</code>
+when read back in.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Input Datatype</th>
+<th style="text-align:left">Value space</th>
+<th style="text-align:left">Outcome Datatype</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><tt>xsd:integer</tt></td>
+<td style="text-align:left">Integer</td>
+<td style="text-align:left"><tt>xsd:integer</tt></td>
+</tr>
+<tr>
+<td style="text-align:left"><tt>xsd:long</tt></td>
+<td style="text-align:left">Integer</td>
+<td style="text-align:left"><tt>xsd:integer</tt></td>
+</tr>
+<tr>
+<td style="text-align:left"><tt>xsd:int</tt></td>
+<td style="text-align:left">Integer</td>
+<td style="text-align:left"><tt>xsd:integer</tt></td>
+</tr>
+<tr>
+<td style="text-align:left"><tt>xsd:short</tt></td>
+<td style="text-align:left">Integer</td>
+<td style="text-align:left"><tt>xsd:integer</tt></td>
+</tr>
+<tr>
+<td style="text-align:left"><tt>xsd:byte</tt></td>
+<td style="text-align:left">Integer</td>
+<td style="text-align:left"><tt>xsd:integer</tt></td>
+</tr>
+<tr>
+<td style="text-align:left"><tt>xsd:decimal</tt></td>
+<td style="text-align:left">Decimal</td>
+<td style="text-align:left"><tt>xsd:decimal</tt></td>
+</tr>
+<tr>
+<td style="text-align:left"><tt>xsd:double</tt></td>
+<td style="text-align:left">Double</td>
+<td style="text-align:left"><tt>xsd:double</tt></td>
+</tr>
+</tbody>
+</table>
+<p>Whether this matters, depends on the data.  For use as a failthful, general
+purpose database dump format, value encoding should not be used.</p>
+<h3 id="encoding-prefixes">Prefixes</h3>
+<p>The use of prefixes can reduce the size of the data because it replaces
+common character sequences with a smaller string.</p>
+<p>There are no detailed syntax rules for prefixes, unlike
+<a href="http://www.w3.org/TR/turtle/#grammar-production-PrefixedName">Turtle</a>
+and <a href="http://www.w3.org/TR/sparql11-query/#rPrefixedname">SPARQL</a> where, for
+example, the local part can not include a <code>#</code> (it must be <code>\#</code>) and the
+local part can&rsquo;t start with a <code>.</code>.</p>
+<p>In RDf Thrift, the prefix part is any string, the local part is any string.  The
+reconsistuted URI is the concatenation of the URI for the prefix and the
+local part.</p>
+<p>Theer are no escape sequences in either part.  Neither <code>%</code> nor <code>\</code> are special.</p>
+<h3 id="encoding-terms">Thrift encoding of RDF Terms</h3>
+<p>RDF Thrift uses the Thrift compact protocol.</p>
+<pre class="box">
+struct RDF_IRI {
+1: required string iri
+}
+
+struct RDF_BNode {
+1: required string label
+}
+
+# Literals, in full form.
+struct RDF_Literal {
+1: required string lex
+2: optional string datatype
+3: optional string langtag
+}
+
+struct RDF_Decimal {
+1: required i64  value ;
+2: required i32  scale ;
+}
+
+struct RDF_VAR {
+1: required string name
+}
+
+struct RDF_ANY { }
+
+struct RDF_UNDEF { }
+
+struct RDF_REPEAT { }
+
+struct RDF_PrefixDecl {
+1: required string prefix ;
+2: required string uri ;
+}
+
+struct RDF_PrefixName {
+1: required string prefix ;
+2: required string localName ;
+}
+
+union RDF_Term {
+1: RDF_IRI          iri
+2: RDF_BNode        bnode
+3: RDF_Literal      literal
+4: RDF_PrefixName   prefixName 
+5: RDF_VAR          variable
+6: RDF_ANY          any
+7: RDF_UNDEF        undefined
+8: RDF_REPEAT       repeat
+# Value forms of literals.
+10: i64             valInteger
+11: double          valDouble
+12: RDF_Decimal     valDecimal
+}
+</pre>
+<h3 id="encoding-graphs-datasets">Thrift encoding of Graphs and Datasets</h3>
+<pre class="box">
+struct RDF_Triple {
+1: required RDF_Term S
+2: required RDF_Term P
+3: required RDF_Term O
+}
+
+struct RDF_Quad {
+1: required RDF_Term S
+2: required RDF_Term P
+3: required RDF_Term O
+4: optional RDF_Term G
+}
+
+union RDF_StreamRow {
+1: RDF_PrefixDecl   prefixDecl
+2: RDF_Triple       triple
+3: RDF_Quad         quad
+}
+</pre>
+<h3 id="encoding-result-sets">Thrift encoding of SPARQL Result Sets</h3>
+<pre class="box">
+struct RDF_VarTuple {
+1: list&lt;RDF_VAR&gt; vars
+}
+
+struct RDF_DataTuple {
+1: list&lt;RDF_Term&gt; row
+}
+</pre>
+
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+
+    </div></body>
+</html>

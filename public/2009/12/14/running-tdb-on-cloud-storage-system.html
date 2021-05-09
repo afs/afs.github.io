@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Running TDB on a cloud storage system</title>
+  <!--<link rel="icon" type="image/x-icon" href="/favicon.ico">-->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+<link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+<link rel="stylesheet" type="text/css" href="/css/custom.css">
+
+</head>
+
+
+<body>
+  
+  <div class="container-fluid">
+
+    <div class="pb-2 mt-4 mb-2">
+      <h1>Running TDB on a cloud storage system</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-9">
+
+      <p>
+<a href="http://project-voldemort.com/">Project Voldemort</a> is an open-source (Apache2 license) distributed, scalable, fault-tolerant,  key-value storage system for large scale data.  Being a key-value store the only operations it provides are:
+</p>
+
+<ul>
+<li>get(key) -&gt; value</li>
+<li>put(key, value)</li>
+<li>delete(key)</li>
+</ul>
+
+<p>Key and value can be various custom types but at the lowest level, they are arrays of bytes.  Serialization schemes on top of byte arrays given structure but access is only via the key (so no filters or joins as part of the store.  It's built for scale and speed, and fault tolerance.</p>
+
+<p>TDB has internal APIS so that difefrentindexing scheme or different stroage technologies can be plugged in. A key-value store can be used as the storage layer for TDB.  
+</p>
+
+<p>There are two areas of storage needed: the node table (a 2-way mapping between the data making up the RDF terms and the associated, fixed size NodeId) and the indexes, which provide the matching of triple patterns. See the <a href="http://openjena.org/wiki/TDB/Architecture">TDB Design Notes</a>.</p>
+
+<p>But a key-value store isn't an ideal backend. The node table is a pair of key-value stores because all that is needed is lookup between RDF term and the NodeId.  The issues that arise are the granularity of access.  TDB heavily caches the mapping in the query engine. 
+</p>
+
+<p>
+The indexes don't naturally map to key-value access because looking up a triple pattern results in all matches.  There are (at least) two ways of doing this.  Either store something like all PO pairs and use S as a key (a bit like Jena's memory model), or use the key-value store to hold part of a datastructure and access it like a disk.
+</p>
+
+<p>
+TDB uses threaded B+Trees with a pluggable disk block layer (this is used to switch between 32 and 64 bit modes) so the key-value store a block storage is a simple fit.  Because B+Trees store the entries in sorted order, caching means that a block probably contains all the PO for a given S if a look up is by S so these two schemes end up being similar even though at the design level they are quite different.
+</p>
+
+<p>Both apects are relying on the query engine doing caching to work sensibly to compensate for the mismatch in requirements (triple match for joins) and interface granularity (for node access).</p>
+
+<p>See also:</p>
+<ul>
+<li>Taylor Cowan has explored the S-&gt;PO in his work putting 
+<a href="http://tech.groups.yahoo.com/group/jena-dev/message/39575">Jena
+on Google App engine</a>.</li>
+<li>The <a href="http://ig.semanticsupport.org/">Infinite Graph for Jena</a> uses the Jena memory model and pages data.</li>
+</ul>
+
+<p>
+Does Project Voldemort work as storage for TDB? Yes, and with only a small amount of code.  Not surprisingly, the performance is limited in this experimental system (e.g. storing invidiual RDF terms in the node table needs better management to avoid latency and overhead in the round trip to the remote table).  Truncating to only the used space then compressing would be useful on teh indexes (see
+<a href="http://www.vldb.org/pvldb/1/1453927.pdf ">RDF-3X</a> for an interesting compression scheme).  But it's a workable scheme and the style of using a key-value store shows TDB can be ported to a wide variety of environments because key-value stores are currently a very active area - project Voldemort provides a cloud-centric stiorage fabric.</p>
+
+<p>
+I've  started putting experimental systems on github.  This experiment is available in the <a href="http://github.com/afs/TDB-V">TDB/V repository</a>.  These are not released, supported systems; they are the source code and development setup (for Eclipse usually). I used Project Voldemort release v0.57. 
+</p>     
+
+    </div>
+
+    <div class="col-md-2"></div>
+
+  </div>
+
+</div>
+
+
+  
+</body>
+</html>

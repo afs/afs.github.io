@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    
+    <title>SPARQL Grouping and Aggregation with no matches</title>
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+    	  rel="stylesheet"
+	  integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+	  crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+	    crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+</head>
+
+  <body><div id="content">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="pb-2 mt-4 mb-2">
+      	<h1>SPARQL Grouping and Aggregation with no matches</h1>
+      </div> 	
+      <div class="docinfo">
+     <p>Andy Seaborne</p>
+     <p>March 2020</p>
+</div>
+<p>Grouping and Aggregation is the combination of <code>GROUP BY</code> and one of the
+aggregation functions such as <code>COUNT</code> or <code>MAX</code>.  When there are no matches to
+the <code>WHERE</code> clause, the spec and one of the original workign groups tests don&rsquo;t
+agree. In the case of aggregation and no <code>GROUP BY</code>, the spec needs a fix to get
+the expected answer.</p>
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#group-agg-no-rows">Grouping and Aggregation, no matching rows</a></li>
+<li><a href="#agg-no-group-no-rows">Aggregation, no grouping, no matching rows</a></li>
+<li><a href="#spec-text">Spec text</a></li>
+<li><a href="#exec-no-rows">Execution when grouping has no rows</a></li>
+<li><a href="#no-group">The &ldquo;no group&rdquo; case</a></li>
+<li><a href="#no-group-fix">Possible Fix, &ldquo;no group&rdquo; case</a></li>
+</ul>
+<h2 id="description">Description</h2>
+<p>Informally, what happens in grouping and aggregation is that the matches from
+the <code>WHERE</code> clause are paritioned by calculating the group key from the <code>GROUP BY</code> expression for each row , with each row going into a collection of rows with
+the same group key. We end up with a dictionary mapping group key to a
+collection of those rows with the same group key. Each grouping of rows has at
+least one row in it because to create dictionary entry a row with that group key
+must have been encountered.</p>
+<p>When there is aggregation, the aggregation function (<code>COUNT</code>, <code>MAX</code>, etc) is
+called on each dictionary entry with the collection of rows as argument.</p>
+<p>If there are no rows as a result of the <code>WHERE</code> clause, there are no pairs of
+group key row collection.</p>
+<p>There is a special case of aggregation when there is no <code>GROUP BY</code> but there is
+an aggregate function. All the rows are collected together with a special group
+key of <code>1</code>. The dictionary has one entry.</p>
+<p>There is a problem in the specfication here - it puts in a special <code>GROUP BY</code>
+expression but when there are no rows from the <code>WHERE</code> clause, it does not get
+called. <a href="#no-group">A possible solution</a> is given below.</p>
+<p>From this we can see that:</p>
+<ul>
+<li>When group+aggregate, there are the same number of rows as the grouping alone.</li>
+<li>If there is aggrgation and no group, there is one row in result.</li>
+</ul>
+<h2 id="group-agg-no-rows">Grouping and Aggregation, no matching rows</h2>
+<p><code>GROUP BY</code>, and <code>GROUP BY</code> with aggregation have the same number of rows.</p>
+<p>There is a disprepency between the SPARQL tests and the specification.
+The test <a href="https://www.w3.org/2009/sparql/docs/tests/summary.html#aggregates-agg-empty-group">aggregates-agg-empty-group</a>
+runs on an empty graph.</p>
+<pre><code>PREFIX ex: &lt;http://example.com/&gt;
+SELECT ?x (MAX(?value) AS ?max)
+WHERE {
+    ?x ex:p ?value
+} GROUP BY ?x
+</code></pre>
+<p>Beause it is an empty graph, the WHERE clause has zero rows, and the group step
+is zero rows.</p>
+<p>But the
+<a href="https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group2.srx">results</a>
+are given as:</p>
+<pre><code>&lt;sparql xmlns=&quot;http://www.w3.org/2005/sparql-results#&quot;&gt;
+  &lt;head&gt;
+    &lt;variable name=&quot;x&quot;/&gt;
+    &lt;variable name=&quot;max&quot;/&gt;
+  &lt;/head&gt;
+  &lt;results&gt;
+    &lt;result&gt; &lt;/result&gt;
+  &lt;/results&gt;
+&lt;/sparql&gt;
+</code></pre>
+<p>which is one row, with no values, not zero rows.</p>
+<pre><code>-----------
+| x | max |
+===========
+|   |     |
+-----------
+</code></pre>
+<p>(the original [test results]((<a href="https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group.srx">https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group.srx</a>)
+have no <code>&lt;variable name=&quot;x&quot;/&gt;</code> - that&rsquo;s corrected in test manifest with <a href="https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group2.srx">these results</a>.)</p>
+<p>It should be:</p>
+<pre><code>-----------
+| x | max |
+===========
+-----------
+</code></pre>
+<p>that is, zero rows, because</p>
+<pre><code>SELECT ?x
+WHERE {
+    ?x ex:p ?value
+} GROUP BY ?x
+</code></pre>
+<p>has zero rows, the grouping is an empty dictionary (no group keys), and
+<code>(MAX(?value) AS ?max)</code> is not called at all.</p>
+<h2 id="agg-no-group-no-rows">Aggregation, no grouping, no matching rows</h2>
+<p>Compare with the case where there is no <code>GROUP BY</code></p>
+<pre><code>SELECT  (MAX(?value) AS ?max)
+WHERE {
+    ?x ex:p ?value
+} 
+
+-------
+| max |
+=======
+|     |
+-------
+</code></pre>
+<p>where there is supposed to be one row.</p>
+<p>Which aggregate is used shouldn&rsquo;t affect the number of rows, and <code>MAX({})</code> is
+defined to be an evaluation error. The <code>COUNT</code> case is clearer:</p>
+<pre><code>SELECT ?x (COUNT(*) AS ?count) 
+WHERE { ?x ex:p ?value }
+GROUP BY ?x
+</code></pre>
+<p>gives</p>
+<pre><code>-------------
+| x | count |
+=============
+-------------
+</code></pre>
+<p>and</p>
+<pre><code>SELECT  (COUNT(*) AS ?count)
+WHERE { ?x ex:p ?value }
+</code></pre>
+<p>gives</p>
+<pre><code>---------
+| count |
+=========
+|     0 |
+---------
+</code></pre>
+<p>The difference is that when there is an empty outcome from <code>GROUP BY</code>, there is
+an empty dictionary and the aggregation function, <code>MAX</code> or <code>COUNT</code> isn&rsquo;t called
+at all. With no <code>GROUP BY</code>, there is a dictionary entry with an empty collection
+of rows and the case <code>Max({}) = error</code> or <code>Count({}) = 0</code> covers the case of a
+call where there zero rows to aggregate.</p>
+<pre><code>SELECT ?x
+WHERE {
+    ?x ex:p ?value
+} GROUP BY ?x
+</code></pre>
+<p>and no matches of <code>?x ex:p ?value</code> is zero rows.</p>
+<h2 id="spec-text">Spec text</h2>
+<p>These are the relevant parts of the spec and errata:</p>
+<p>Section 18.5.1 <a href="https://www.w3.org/TR/sparql11-query/#aggregateAlgebra">https://www.w3.org/TR/sparql11-query/#aggregateAlgebra</a></p>
+<p>Group, produces a dictionary with group key <code>ListEval(exprlist, μ)</code> to (<code>→</code>) rows <code>{ μ' | ...}</code>:</p>
+<pre><code>Group(exprlist, Ω) = { ListEval(exprlist, μ) → { μ' | μ' in Ω, ListEval(exprlist, μ) = ListEval(exprlist, μ') } | μ in Ω }
+</code></pre>
+<p>Aggregation, produces a dictionary group key to aggregate value:</p>
+<pre><code>Aggregation(exprlist, func, scalarvals, { key1→Ω1, ..., keym→Ωm } )
+   = { (key, F(Ω)) | key → Ω in { key1→Ω1, ..., keym→Ωm } }
+</code></pre>
+<p>Then <code>AggregateJoin</code> puts the results into a query solution.</p>
+<p>During evaluation (after <a href="https://www.w3.org/2013/sparql-errata#errata-query-1">errata-query-11</a>):</p>
+<pre><code>eval(D(G), Aggregation(exprlist, func, scalarvals, Group(exprlist, P)))
+    = Aggregation(exprlist, func, scalarvals, eval(D(G), Group(exprlist, P))) 
+</code></pre>
+<p>Calling the aggregate function happens within the <code>F(Ω)</code> calling <code>func</code>.</p>
+<h2 id="exec-no-rows">Execution when grouping has no rows</h2>
+<p>Executing when the grouping has no rows, we get:</p>
+<pre><code>Group(exprlist, Ω) = { }
+</code></pre>
+<p>because <code>μ in Ω</code> is empty. Then aggregation is on the empty dictionary:</p>
+<pre><code>Aggregation(exprlist, func, scalarvals, { } )
+   =  { (key, F(Ω)) | key → Ω in { } }
+</code></pre>
+<p>which is also <code>{ }</code> because there is no <code>(key → Ω) in { }</code>.</p>
+<p>The query result is zero rows.</p>
+<p>If <code>GROUP BY</code> produces zero rows, aggregation produces zero rows.</p>
+<h2 id="no-group">The &ldquo;no group&rdquo; case</h2>
+<p>Use of aggregates when there is no <code>GROUP</code> BY is different.</p>
+<p>In section [18.2.4.1 Grouping and Aggregation}(https://www.w3.org/TR/sparql11-query/#sparqlGroupAggregate)
+puts in a dummy key of <code>(1)</code> (a exprlist of one element which is the value 1).</p>
+<p>But if there are no rows for the patten matching.</p>
+<pre><code>Group(exprlist, { }) = { }
+</code></pre>
+<p>regardless of the <code>exprlist</code> - the dictionary entry using key 1 is not created.</p>
+<p>But we expect</p>
+<pre><code>SELECT (COUNT(*) AS ?C)
+WHERE {
+    ?x ex:p ?value
+}
+</code></pre>
+<p>(no matches to the <code>WHERE</code>) to be one row with <code>?C</code> being <code>0</code>.</p>
+<p>If it were <code>MAX</code>, then <code>MAX({})</code> happens, which evaluates to an error so we have one
+row, no columns.</p>
+<p>In particular, aggrgeate with no group is <em>not</em> like writing:</p>
+<pre><code>PREFIX ex: &lt;http://example.com/&gt;
+SELECT ?x (COUNT(*) AS ?count)
+WHERE {
+    ?x ex:p ?value
+} GROUP BY (1)
+</code></pre>
+<p>which is &ldquo;no rows&rdquo; again.</p>
+<h2 id="no-group-fix">Possible Fix, &ldquo;no group&rdquo; case</h2>
+<p>Somehow, &ldquo;no group by, with aggregates&rdquo; needs to be made special.</p>
+<p>One way is to make &ldquo;aggregate, no group&rdquo; become a distinct, special case of
+<code>Group()</code> that creates the right dictionary.</p>
+<p>This can be done in
+<a href="https://www.w3.org/TR/sparql11-query/#sparqlGroupAggregate">18.2.4.1, Step Aggregates</a>.</p>
+<p>We make the dummy key special marker <code>'group-all'</code>, then group all rows into
+one dictionary entry, even if the row collection is empty.</p>
+<p>This safe because <code>'group-all'</code> isn&rsquo;t an exprlist and so can not be written in a
+query using <code>GROUP BY</code>.</p>
+<p>We could use any marker value in place of <code>'group-all'</code> as long as it is not an
+exprlist. <code>1</code>, not <code>(1)</code>, would work or <code>{}</code>. The group key of <code>1</code> is introduced
+when <code>Group</code> is evaluated as that group keys are RDF terms as before.</p>
+<p>The only time <code>Group('group-all', P)</code> appears is when there is an aggregation step
+and there is no <code>GROUP BY</code>.</p>
+<pre><code>If Q contains GROUP BY exprlist
+   Let G := Group(exprlist, P)
+Else If Q contains an aggregate in SELECT, HAVING, ORDER BY
+   Let G := Group((1), P)
+Else
+   ...
+</code></pre>
+<p>becomes:</p>
+<pre><code>If Q contains GROUP BY exprlist
+   Let G := Group(exprlist, P)
+Else If Q contains an aggregate in SELECT, HAVING, ORDER BY
+   Let G := Group('group-all', P)
+Else
+   ...
+</code></pre>
+<p>Then <code>Group</code> handles the case <code>Group('group-all', Ω)</code> by putting in the group key
+of 1 that the spec uses:</p>
+<pre><code>Group('group-all', Ω) = { (1 → Ω) }
+Group(exprlist, Ω) = { ListEval(exprlist, μ) → { μ' | μ' in Ω, ListEval(exprlist, μ) = ListEval(exprlist, μ') } | μ in Ω }
+</code></pre>
+<p><code>exprList</code> is never <code>'group-all'</code> so these two evaluation cases don&rsquo;t overlap.</p>
+
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+
+    </div></body>
+</html>

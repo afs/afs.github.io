@@ -1,52 +1,75 @@
-Keep Jekyll up-to-date:
-"bundle update"
+== To do
+
+Step 1:
+
+publish statically
+publish ./public
+
+(also README.md for github/afs)
+
+==== Front Matter
+https://gohugo.io/content-management/front-matter/#front-matter-variables
+
+aliases:  array of old published paths of renamed content
+date:
+layout:
+markup: "rst", "md"
+
+slug:
+  appears as the tail of the output URL. A value specified in front matter will override the segment of the URL based on the filename.
+
+title:
+summary:
+url:
+
+==== Notes
+
+HTML goes through templating.
+--> Improve old posts
+
+Dates on pages: 
+
+Top index.html?
+404.html
+
+https://gohugo.io/hosting-and-deployment/hosting-on-github/
+
+=== GH actions
+later.
+
+.nojekyll
+"root of publishing source"
+public until GH actions?
+
+==== seaborne.org?
+
+CNAME in root.
+
+==== Auto TOC
+
+==== Fonts
+
+Muli
+Open Sans
+Work Sans
+Source+Sans+Pro
+
+==== Hugo and posts
+https://gohugo.io/content-management/urls/#permalinks
+
+https://blog.arkey.fr/2020/04/20/migrating-from-jekyll-to-hugo-deploying-with-github-pages/
+"""
+After some search I found these can tweaked with the permalink setting, I don’t know exactly why but this was only taken in account after the [params] section.
+
+[permalinks]
+    posts = "/:year/:month/:day/:title/"
+"""
+https://www.dev-eth0.de/2019/07/13/convert-jekyll-to-hugo-permalinks/
 
 
-Pure static site:
-
-Empty file ".nojekyll"
-
-then HTML in /docs?
+==== GH Actions
 
 
--------------------
+gitignore - includes /public/
 
-"bundle exec jekyll build"
-
-"bundle exec jekyll server" -> localhost:4000
-
-
-Jekyll 2:
-  For jekyll-coffeescript (required)
-sudo gem install execjs
-
-sudo gem install therubyracer
-
-or instead of therubyracer
-  sudo apt-get install nodejs
-
-
-    <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
-      {{ post.excerpt }}
-    </li>
-
-for a excerpt in the Blog page.
-But it goes wild on some imported blogger pages.
-
-* Import blogger
-
-ruby -rubygems -e 'require "jekyll-import";
-    JekyllImport::Importers::Blogger.run({
-      "source"                => "/home/afs/Desktop/blog-10-10-2014.xml",
-      "no-blogger-info"       => false, # not to leave blogger-URL info (id and old URL) in the front matter
-      "replace-internal-link" => false, # replace internal links using the post_url liquid tag.
-    })'
-
-CNAME file:
-One domain only
-
-<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
-16px? 17px?
-
-*** If the *.md file is in _site, not the .md, then check the Jekyll md header.
+https://github.com/bric3/bric3.github.io/blob/hugo-sources/.gitignore

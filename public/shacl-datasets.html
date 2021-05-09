@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    
+    <title>Extending SHACL to RDF Datasets</title>
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+    	  rel="stylesheet"
+	  integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+	  crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+	    crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+</head>
+
+  <body><div id="content">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="pb-2 mt-4 mb-2">
+      	<h1>Extending SHACL to RDF Datasets</h1>
+      </div> 	
+      <div class="docinfo">
+     <p>Andy Seaborne</p>
+</div>
+<p>SHACL defines a set of validation conditions in a <a href="https://www.w3.org/TR/shacl/#shapes-graph">Shapes
+Graph</a>. These are used to validate an
+<a href="https://www.w3.org/TR/rdf11-concepts/#section-rdf-graph">RDF Graph</a> to produce
+a validation report.</p>
+<p>This note describes applying the
+<a href="https://www.w3.org/TR/shacl/">SHACL Shapes Constraint Language</a>
+to <a href="https://www.w3.org/TR/rdf11-concepts/#section-dataset">RDF Datasets</a>.</p>
+<h2 id="overview">Overview</h2>
+<p>Validation of a RDF Datasets is performed by associating a target graph with
+each shape in a &ldquo;Shapes Dataset&rdquo;. The target graph can be specified on each
+shape but can also be written to apply to groups of shapes.</p>
+<p>Shapes graphs can be reused so that the same set of shapes is used to validate
+multiple graphs in the dataset. The shapes to used for a dataset are contained
+in a &ldquo;Shapes Dataset&rdquo;, a collection of shapes graphs and which defines the
+shapes to be applied to an RDF datasets with different sets of shapes for
+different graphs in the dataset and sharing of shapes between different target
+graphs.</p>
+<p>The declaration
+<code>prefix shx: &lt;http://www.w3.org/ns/shacl-x#&gt;</code>
+is assumed in the definitions.</p>
+<h2 id="target-graphs">Target Graphs</h2>
+<p><code>shx:targetGraph</code> defines graphs to apply a shape to.
+The property can be repeated.</p>
+<p>Example: a shape that is scoped to data graph <code>data:namedGraph1</code>:</p>
+<pre><code>:nodeShape0
+    shx:targetGraph data:namedGraph1 ;
+    sh:targetObjectsOf ns:q ;
+    sh:datatype xsd:integer ;
+    .
+</code></pre><p>Certain URIs define a collection of graphs in the target dataset. The shape
+applies to each of the graphs as the data graph.</p>
+<table>
+<thead>
+<tr>
+<th>URI</th>
+<th>Graphs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shx:all</code></td>
+<td>All the graphs (named and default) of the data dataset.</td>
+</tr>
+<tr>
+<td><code>shx:named</code></td>
+<td>All the named graphs of the data dataset.</td>
+</tr>
+<tr>
+<td><code>shx:default</code></td>
+<td>The default graph of the data dataset.</td>
+</tr>
+<tr>
+<td><code>shx:union</code></td>
+<td>The union graph formed from all named graphs of the data dataset.</td>
+</tr>
+</tbody>
+</table>
+<p>The subject of the <code>shx:targetGraph</code> triple defines the scope - it can be a
+specific shape, a named graph of the shapes dataset or the whole shapes
+dataset (when the subject is the URI of the shapes dataset).</p>
+<pre><code># Shapes Named graph
+&lt;#gn1&gt; shx:targetGraph data:namedGraph1 .
+GRAPH &lt;#gn1&gt; {
+    :nodeShape0
+        sh:targetObjectsOf ns:q ;
+        sh:datatype xsd:integer ;
+}
+
+</code></pre><pre><code># Shapes Dataset
+# All shapes in the shape dataset apply to all graphs in the data dataset.
+&lt;&gt; shx:targetGraph shx:all .
+
+:nodeShape0
+    sh:targetObjectsOf ns:q ;
+    sh:datatype xsd:integer ;
+}
+
+</code></pre><p>Validating with a target of <code>shx:union</code> is performed on the union of the named
+graph so the triples used to fulfil a shape may be in different graph. For
+example, if a shape defines a number of required properties (&quot;<code>sh:minCount 1</code>&quot;),
+these may be in different named graphs, but if present in the union graph,
+validating suceeds.</p>
+<p><code>shx:targetGraphExclude</code> defines graphs to be excluded from the target graphs.
+This target condition is applied after calculating the included target graphs
+for a shape.</p>
+<table>
+<thead>
+<tr>
+<th>URI</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shx:targetGraph</code></td>
+<td>Property identifying a data graph to target</td>
+</tr>
+<tr>
+<td><code>shx:targetGraphExclude</code></td>
+<td>Property identifying a data graph to exclude as a target</td>
+</tr>
+</tbody>
+</table>
+<h2 id="validation-reports">Validation Reports</h2>
+<p>Each validation result in a validation report should have a <code>shx:resultGraph</code>
+triple whose object is the graph in which the validation report occurs. It is
+the shape&rsquo;s <code>shx:targetGraph</code> if that is given, the graph name matching
+<code>shx:targetGraphPattern</code> or the specific named graph of the data dataset in
+the case of <code>shx:named</code> or <code>shx:all</code>.</p>
+<table>
+<thead>
+<tr>
+<th>URI</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>shx:resultGraph</code></td>
+<td>Data graph that caused the validation result</td>
+</tr>
+</tbody>
+</table>
+<h2 id="grouping-shapes">Grouping Shapes</h2>
+<p>The graphs of the shapes dataset can be used to group shapes. If a
+<code>shx:targetGraph</code> triple has a graph name as subject, then the target rule is
+applied as the default rule for all shapes in that shapes graph. The shape graph
+graph name does not need to correspond to any graph in the data to be validated.</p>
+<p>The <code>shx:targetGraph</code> can be in the default graph of the shapes datset or in
+a named graph. These two examples achive the same effect.</p>
+<pre><code>&lt;#g&gt; shx:targetGraph data:graphName .
+GRAPH &lt;#g&gt; {
+   ... any shapes in graph &lt;#g&gt; will have the targetGraph scope above ...
+}
+</code></pre><pre><code>GRAPH &lt;#g&gt; {
+   &lt;#g&gt; shx:targetGraph data:graphName .
+   ... any shapes in graph &lt;#g&gt; will have the targetGraph scope above ...
+}
+</code></pre><p>The grouping rules applies to <code>shx:targetGraphExclude</code> as well.</p>
+<h3 id="sharing-common-shapes-patterns">Sharing Common Shapes Patterns</h3>
+<p>The property <code>shx:include</code> can be used to include triples from another named
+graph of the shapes dataset. A typical use is to include shapes from another
+graph which does not have a <code>shx:targetGraph</code>, using it like a includes
+library.</p>
+<p>If the subject is the URI of the shapes dataset, the inclusion is into
+declaration applies to the whole dataet (all shapes graphs), otherwise it is to
+the named graph of the subject of the triple.</p>
+<p>It is similar to <code>owl:imports</code> except the inclusion is named by the subject and
+only applies to including graphs within the shapes dataset.</p>
+<p><code>shx:include</code> is applied transitively.</p>
+<h2 id="examples">Examples</h2>
+<p>Examples are written in <a href="https://www.w3.org/TR/trig/">TriG</a>.</p>
+<p>Assumed prefixes:</p>
+<pre><code>PREFIX rdf:     &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:    &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX xsd:     &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+PREFIX sh:      &lt;http://www.w3.org/ns/shacl#&gt;
+PREFIX shx:     &lt;http://www.w3.org/ns/shacl-x#&gt;
+
+PREFIX data:    &lt;http:/example/data/&gt;
+PREFIX s:       &lt;http:/example/shapes/&gt;
+PREFIX ns       &lt;http:/example/ns#&gt;
+</code></pre><h3 id="examples-1">Examples</h3>
+<p>Apply all shapes to all graphs in the data.</p>
+<pre><code>&lt;&gt; shx:targetGraph shx:all .
+
+:nodeShape0
+    shx:targetGraph data:namedGraph1 ;
+    sh:targetObjectsOf ns:q ;
+    sh:datatype xsd:integer ;
+    .
+</code></pre><h3 id="example">Example</h3>
+<p>All shapes applied to a specific named graph.</p>
+<pre><code>&lt;&gt; shx:targetGraph data:namedGraph1 .
+
+:nodeShape0
+    sh:targetObjectsOf ns:q ;
+    sh:datatype xsd:integer ;
+    .
+
+:nodeShape1
+    sh:targetObjectsOf ns:p ;
+    sh:datatype xsd:subject ;
+    .
+</code></pre><h3 id="example-1">Example</h3>
+<p>A collection of shapes for one graph.</p>
+<pre><code>GRAPH &lt;#g1&gt; {
+     &lt;#g1&gt; shx:targetGraph data:namedGraph1 .
+
+    :nodeShape0
+        sh:targetObjectsOf ns:q ;
+        sh:datatype xsd:integer .
+
+    :nodeShape1
+        sh:targetObjectsOf ns:q ;
+        sh:class ns:class .
+}
+</code></pre><h3 id="example-2">Example</h3>
+<p>Apply to all graphs except <code>data:namedGraph1</code>.</p>
+<pre><code>&lt;&gt; shx:targetGraph data:all ;
+   shx:targetGraphExclude data:namedGraph1 .
+</code></pre><h2 id="possible-additions">Possible additions</h2>
+<h3 id="graph-name-patterns">Graph name patterns</h3>
+<p>For targets, a regular expression to filter the data dataset graph names based
+on URIs:</p>
+<pre><code>[] shx:targetGraphPattern &quot;http://example/.*/shapes&quot; .
+</code></pre><pre><code>[] shx:targetGraphPattern (&quot;http://example/shapes/set-\\d{1,4}&quot; . &quot;i&quot;) .
+</code></pre><p>Similarly <code>shx:targetGraphExcludePattern</code>.</p>
+<h3 id="dataset-level-constraints">Dataset-level constraints</h3>
+<p>Constraints on graphs and graph names (e.g. URI pattern of gah names).</p>
+<p>These can be done by escaping to SPARQL and a global constraint but if there are
+some common constraints, then including a direct form would be useful.</p>
+
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+
+    </div></body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Repacking B+Trees</title>
+  <!--<link rel="icon" type="image/x-icon" href="/favicon.ico">-->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+<link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
+
+<link rel="stylesheet" type="text/css" href="/css/custom.css">
+
+</head>
+
+
+<body>
+  
+  <div class="container-fluid">
+
+    <div class="pb-2 mt-4 mb-2">
+      <h1>Repacking B+Trees</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-9">
+        <p>
+<a href="http://openjena.org/TDB">TDB</a> uses
+<a href="http://en.wikipedia.org/wiki/B%2Btree">B+trees</a>
+for it's triple and quad indexing. 
+</p>
+
+<p>
+The indexes hold 3 or 4 NodeIds, where a NodeId is a fixed length 64 bit unique
+number for each RDF term in the database. Numbers, dates and times are encoded directly
+into the 64 bits where possible, otherwise the NodeId refers to the location in a separate NodeId to RDF term table like all other types,including IRIs.
+</p>
+
+<p>
+The B+Trees have a number of leaf blocks, each of which holds only records (key, value pairs, except there's no "value" part in a triple index - just the key of S,P and O in various orders).
+TDB threads these blocks together so that a scan does not need to touch the
+rest of the tree - scans happen when you look up, say S?? for known subject and unknown property and object.
+The scan returns all the triples with a particular S. Counting all the triples only touches the leaves of the B+Tree, not the branches.
+</p>
+
+<p>
+B+Trees provide performant indexing over a wide range of memory situations,
+ranging from very little caching of disk structures in memory, through to 
+being able to cache substantial portions of the tree.
+</p>
+
+<p>
+The TDB B+Trees have a number of
+<a href="http://en.wikipedia.org/wiki/Block_%28data_storage%29">block storage layers</a>;
+an in-JVM block caching for use on 32 bit JVMs, memory mapped files, 
+for 64 bit JVMs, and an in-memory RAM-disk for testing. The in-memory RAM disk is
+not efficient but it is a very good simulation of a disk - it 
+really does copy the blocks used by a client when written to another area
+so there is no possibility of updating blocks through references held by the
+client after the block has been written to "disk".
+</p>
+
+<p>
+However, one disadvantage can be that the index isn't very well packed. The B+Trees
+guarantee that each block is at least 50% full. In practice, the blocks are 60-70% full for indexes POS and OSP.
+But a worse case can arise happens when inserting into the SPO index because data typically arrives with all the triples for one subject, then all the triples for another subject, meaning the data is nearly sorted. While this makes the processing faster, it makes the resulting B+Tree about 50%-60% packed.
+</p>
+
+<p>
+Packing density matters because it influences how much of the tree is cached in a fixed amount of computer memory. If it's 50% packed, then it's only 50% efficient in the cache.
+</p>
+
+<p>
+There are various ways to improve on this (compress blocks,
+<a href="http://en.wikipedia.org/wiki/B_sharp_tree">B#Trees</a>,
+and many more besides - B-tree variations are very extensively studied data-structures).
+</p>
+
+<p>
+I have been working on a B+Tree repacking programme that takes an existing B+Tree and produces a maximumally packed B+Trees. The database is then smaller on disk and the in-memory caches are more efficiently used. The trees produces are legal B+Trees, and have a packing density of close to 100%. Rebuilding indexes is fast and scales linearly.
+</p>
+
+<p><b>The Algorithm</b></p>
+
+<p>
+Normally, B+Trees grow at the root. A B+tree is the same depth everywhere in the tree and the tree
+only gets deeper if the root node of the tree is split and a new root is created pointing to down the two blocks formed by splitting the old root. This algorithm, building a
+tree from a stream of records, grows the tree from the leaves towards the root.
+While the algorithm is running there isn't a legal tree - it's only when the algorithm
+finishes, does a legal B+Tree emerge.
+</p>
+
+<p>
+All the data of a B+tree resides in the leaves - the branches above tell you
+which leaf block to look in (this is the key difference between B-Trees and B+Trees).
+The first stage of repacking takes a stream of records (key and value) from the initial tree. 
+This stream will be in sorted order because it's being read out of a B+Tree and 
+for a TDB B+tree, it's a scan tracing the threading of the leaf blocks together.
+In other words, it's not memory intensive.
+</p>
+
+<p>
+In the first stage, new leaf blocks are produces, one at a time. A block is filled
+completely, a new block allocated, the threading pointers completed and the full
+block written out. In addition, the block number and highest key in the block are emitted.
+The leaf block is not touched again.
+</p>
+
+<p>The exception is the last two blocks of the leaf layer. A B+Tree must have blocks
+at least 50% full to be a legal tree. Although the TDB B+Tree code can cope with blocks
+that are smaller than the B+tree guarantee, it's neater to rebalance the last two blocks in the case the last block is below the minimum size. Because the second-to-last block is
+completely full, it's always possible to rebalance in just two blocks.
+</p>
+
+<p>
+Phase two takes as input the stream of block number and highest key from the level below
+and builds branch nodes for the B+Tree pointing, by block number, to the blocks produced
+in the phase before. When a block is finished, the block can be written out
+and a block number and split key emitted. This split key isn't the highest key
+in the block - it's the highest key of the entire sub-tree at that point
+but this the key passed. A B+tree branch node has N block pointers and N-1
+keys and the split key is the last key from making the full block, and is
+the Nth key from below.
+</p>
+
+<p>
+Once again, the last two blocks are rebalanced to maintain then B+Tree invariant of all blocks
+being at least half full. For large trees, there are quite a few blocks, so the rebalance of 
+just two of them is insignificant. For small trees, it not really worth repacking the tree - 
+block caching at runtime hides any advantages there might be.
+</p>
+
+<p>
+The second phase is repeated applied to the block number and split key stream from the layer below
+until a layer in the tree is only one block (it can't be zero blocks). This single block
+is the new root block. The third phase is to write out the B+Tree details to disk
+and put the root block somewhere where it can be found when the B+Tree is reopened.
+</p>
+
+<p><b>Consequences</b></p>
+
+<p>
+The repacking algorithm produces B+Trees that are the approaching half the size of the
+original trees. For a large dataset, that's several gigabytes.
+</p>
+
+<p>
+The repacked trees perform a bit faster than trees formed by normal use except
+in one case where they are faster. If the tree is small, the majority fits in the RAM caches,
+then repacking means less RAM is used but the speed is much the same (in fact as few percent slower,
+hard to measure but less than 5%, presumably because there is a difference ratio of tree decent and in-block binary search being done by the CPU.
+This may be no more than a RAM cache hierarchy effect).
+</p>
+
+<p>
+However, if the tree was large, and repacked now fits mostly in memory, the repacked trees are faster.
+As the indexes for an RDF dataset grows much large than the cacheable space, then this effect
+slowly declines. Some figures to show this are in preparation.
+</p>
+
+<p>
+The biggest benefit however, is not directly the speed of access or the reduced disk space.
+It's the fact here is a fast and linear growth way to build a B+Tree from 
+a stream of sorted records. It's much faster than simply using the
+regular insertion into the B+Tree.
+</p>
+
+<p>
+This is part of the new bulk loader for TDB. It uses external sorting to
+produce the input to index creation using this B+Tree repacking algorithm.
+The new bulk loader can save hours on large data loads.
+</p>     
+
+    </div>
+
+    <div class="col-md-2"></div>
+
+  </div>
+
+</div>
+
+
+  
+</body>
+</html>
