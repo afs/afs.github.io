@@ -68,7 +68,6 @@ GRAPH <#gn1> {
         sh:targetObjectsOf ns:q ;
         sh:datatype xsd:integer ;
 }
-
 ```
 ```
 # Shapes Dataset
@@ -79,7 +78,6 @@ GRAPH <#gn1> {
     sh:targetObjectsOf ns:q ;
     sh:datatype xsd:integer ;
 }
-
 ```
 
 Validating with a target of `shx:union` is performed on the union of the named

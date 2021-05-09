@@ -19,20 +19,6 @@ body { font-family: "Roboto", sans-serif ;
 }
 */
 
-/* From bootstrap: */
-/*
-page-header {
-    padding-bottom: 9px;
-    margin: 40px 0 20px;
-    border-bottom: 1px solid #eee;
-}
-*/
-
-/* Override bootstrap */
-.page-header {
-  border-bottom: none;
-}
-
 .docinfo {
     margin-bottom :   30px;
     margin-top :      -10px;
@@ -48,14 +34,21 @@ h2 { font-size: 24px ; font-weight: bold ; }
 h3 { font-size: 18px ; font-weight: bold ; }
 
 code { font-family: "Inconsolata" ; color: black ; background-color: #F0F0F0 ; }
+
 pre {
   font-family: "Inconsolata" ;
-  margin-left: 20px;
-  margin-right: 5%;
+  background-color: #F0F0F0;
+  color:            black;
+  margin-left:      5%;
+  margin-right:     10%;
+  line-height:      16px ;
+  background-color: #F0F0F0;
+  color:            black;
+  padding:          2mm;
+  page-break-inside: avoid ;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
-
-
-pre code { white-space: pre; overflow: auto; }
 
 .box {
   margin-left :     5% ;

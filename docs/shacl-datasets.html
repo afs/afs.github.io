@@ -104,7 +104,6 @@ GRAPH &lt;#gn1&gt; {
         sh:targetObjectsOf ns:q ;
         sh:datatype xsd:integer ;
 }
-
 </code></pre><pre><code># Shapes Dataset
 # All shapes in the shape dataset apply to all graphs in the data dataset.
 &lt;&gt; shx:targetGraph shx:all .
@@ -113,7 +112,6 @@ GRAPH &lt;#gn1&gt; {
     sh:targetObjectsOf ns:q ;
     sh:datatype xsd:integer ;
 }
-
 </code></pre><p>Validating with a target of <code>shx:union</code> is performed on the union of the named
 graph so the triples used to fulfil a shape may be in different graph. For
 example, if a shape defines a number of required properties (&quot;<code>sh:minCount 1</code>&quot;),
