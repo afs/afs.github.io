@@ -1,4 +1,0 @@
-repository: https://github.com/afs/afs.github.io
-encoding: utf-8
-exclude: [Gemfile, Gemfile.lock, AFS, Store, FONTS, ignore]
-markdown: kramdown
