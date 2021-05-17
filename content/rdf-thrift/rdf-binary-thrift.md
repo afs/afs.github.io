@@ -171,9 +171,10 @@ struct RDF_BNode {
 
 # Literals, in full form.
 struct RDF_Literal {
-1: required string lex
-2: optional string datatype
-3: optional string langtag
+1: required string  lex ;
+2: optional string  langtag ;
+3: optional string  datatype ;
+4: optional RDF_PrefixName dtPrefix ;
 }
 
 struct RDF_Decimal {
