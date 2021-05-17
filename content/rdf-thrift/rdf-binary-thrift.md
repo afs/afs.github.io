@@ -154,101 +154,105 @@ In RDf Thrift, the prefix part is any string, the local part is any string.  The
 reconsistuted URI is the concatenation of the URI for the prefix and the
 local part.
 
-Theer are no escape sequences in either part.  Neither `%` nor `\` are special.
+There are no escape sequences in either part.  Neither `%` nor `\` are special.
 
-### Thrift encoding of RDF Terms {#encoding-terms}
+## Thrift encoding of RDF Terms {#encoding-terms}
 
 RDF Thrift uses the Thrift compact protocol.
 
-<pre class="box">
-struct RDF_IRI {
-1: required string iri
-}
+    struct RDF_IRI {
+    1: required string iri
+    }
+    
+    struct RDF_PrefixName {
+    1: required string prefix ;
+    2: required string localName ;
+    }
+    
+    struct RDF_BNode {
+    1: required string label
+    }
+    
+    struct RDF_Literal {
+    1: required string  lex ;
+    2: optional string  langtag ;
+    3: optional string  datatype ;
+    4: optional RDF_PrefixName dtPrefix ;
+    }
+    
+    struct RDF_Decimal {
+    1: required i64  value ;
+    2: required i32  scale ;
+    }
+    
+    struct RDF_VAR {
+    1: required string name ;
+    }
+    
+    struct RDF_ANY { }
+    
+    struct RDF_UNDEF { }
+    
+    struct RDF_REPEAT { }
+    
+    union RDF_Term {
+    1: RDF_IRI          iri
+    2: RDF_BNode        bnode
+    3: RDF_Literal      literal
+    4: RDF_PrefixName   prefixName 
+    5: RDF_VAR          variable
+    6: RDF_ANY          any
+    7: RDF_UNDEF        undefined
+    8: RDF_REPEAT       repeat
+    9: RDF_Triple       tripleTerm  # RDF-star
+    
+    # Value forms of literals.
+    10: i64             valInteger
+    11: double          valDouble
+    12: RDF_Decimal     valDecimal
+    }
 
-struct RDF_BNode {
-1: required string label
-}
+## Thrift encoding of Triples, Quads and rows. {#encoding-tuples}
 
-# Literals, in full form.
-struct RDF_Literal {
-1: required string  lex ;
-2: optional string  langtag ;
-3: optional string  datatype ;
-4: optional RDF_PrefixName dtPrefix ;
-}
+    struct RDF_Triple {
+    1: required RDF_Term S
+    2: required RDF_Term P
+    3: required RDF_Term O
+    }
+    
+    struct RDF_Quad {
+    1: required RDF_Term S
+    2: required RDF_Term P
+    3: required RDF_Term O
+    4: optional RDF_Term G
+    }
+    
+    struct RDF_PrefixDecl {
+    1: required string prefix ;
+    2: required string uri ;
+    }
 
-struct RDF_Decimal {
-1: required i64  value ;
-2: required i32  scale ;
-}
+## Thrift encoding of RDF Graphs and RDF Datasets {#encoding-graphs-datasets}
 
-struct RDF_VAR {
-1: required string name
-}
+    union RDF_StreamRow {
+    1: RDF_PrefixDecl   prefixDecl
+    2: RDF_Triple       triple
+    3: RDF_Quad         quad
+    }
 
-struct RDF_ANY { }
+RDF Graphs are encoded as a stream of `RDF_Triple` and `RDF_PrefixDecl`.
 
-struct RDF_UNDEF { }
+RDF Datasets are encoded as a stream of `RDF_Triple`, `RDF-Quad` and `RDF_PrefixDecl`.
 
-struct RDF_REPEAT { }
+## Thrift encoding of SPARQL Result Sets {#encoding-result-sets}
 
-struct RDF_PrefixDecl {
-1: required string prefix ;
-2: required string uri ;
-}
+A SPARQL Result Set is encoded as a list of variables (the header), then
+a stream of rows (the results).
 
-struct RDF_PrefixName {
-1: required string prefix ;
-2: required string localName ;
-}
-
-union RDF_Term {
-1: RDF_IRI          iri
-2: RDF_BNode        bnode
-3: RDF_Literal      literal
-4: RDF_PrefixName   prefixName 
-5: RDF_VAR          variable
-6: RDF_ANY          any
-7: RDF_UNDEF        undefined
-8: RDF_REPEAT       repeat
-# Value forms of literals.
-10: i64             valInteger
-11: double          valDouble
-12: RDF_Decimal     valDecimal
-}
-</pre>
-
-### Thrift encoding of Graphs and Datasets {#encoding-graphs-datasets}
-
-<pre class="box">
-struct RDF_Triple {
-1: required RDF_Term S
-2: required RDF_Term P
-3: required RDF_Term O
-}
-
-struct RDF_Quad {
-1: required RDF_Term S
-2: required RDF_Term P
-3: required RDF_Term O
-4: optional RDF_Term G
-}
-
-union RDF_StreamRow {
-1: RDF_PrefixDecl   prefixDecl
-2: RDF_Triple       triple
-3: RDF_Quad         quad
-}
-</pre>
-
-### Thrift encoding of SPARQL Result Sets {#encoding-result-sets}
-
-<pre class="box">
-struct RDF_VarTuple {
-1: list&lt;RDF_VAR&gt; vars
-}
-
-struct RDF_DataTuple {
-1: list&lt;RDF_Term&gt; row
-}
-</pre>
+    struct RDF_VarTuple {
+    1: list<RDF_VAR> vars
+    }
+    
+    struct RDF_DataTuple {
+    1: list<RDF_Term> row
+    }
