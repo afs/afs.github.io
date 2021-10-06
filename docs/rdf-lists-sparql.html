@@ -99,8 +99,8 @@ things that aren&rsquo;t lists.  The last example shows a way to address that by
 finding and marking relavent points in the graph, doing some work and going back
 and tidying up.  The graph updated is also being used as a scratch pad.</p>
 <h2 id="a-nameadd-firstaadd-an-element-to-the-start-of-a-list"><a name="add-first"></a>Add an element to the start of a list</h2>
-<pre><code>PREFIX :    &amp;lt;http://example/&gt; 
-PREFIX rdf: &amp;lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+<pre><code>PREFIX :    &lt;http://example/&gt; 
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 
 INSERT DATA {
   :x0 :p () .
@@ -118,8 +118,8 @@ INSERT { ?x :p [ rdf:first 0 ;
 </code></pre>
 <p>This one is relatively easy. Find the list start <tt>?x :p ?list</tt>, which works whether the list is zero length or already has elements,  delete the old triple that connected to the start of the list, put in a new cons cell (the <tt>[&hellip;]</tt>) at the start, and link to it.</p>
 <h3 id="a-nameadd-lastaadd-an-element-to-the-end-of-a-list"><a name="add-last"></a>Add an element to the end of a list</h3>
-<pre><code>PREFIX :    &amp;lt;http://example/&gt; 
-PREFIX rdf: &amp;lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+<pre><code>PREFIX :    &lt;http://example/&gt; 
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 
 INSERT DATA {
   :x0 :p () .
@@ -163,8 +163,8 @@ length zero will be caught again by the adding to a list of length one.</p>
 <p>For a list of length 0, the style is the same but the finding the triple to
 delete-insert to attach the cons cell is different.</p>
 <h3 id="a-namedel-firstadelete-the-element-at-the-start-of-a-list"><a name="del-first"></a>Delete the element at the start of a list</h3>
-<pre><code>PREFIX :      &amp;lt;http://example/&gt; 
-PREFIX rdf:   &amp;lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+<pre><code>PREFIX :      &lt;http://example/&gt; 
+PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 
 INSERT DATA {
   :x3 :p (1 2 3) .
@@ -191,8 +191,8 @@ list, delete it (note the <tt>WHERE</tt> pattern and <tt>DELETE</tt> template
 are the same), and insert the new triple that links the list directly to the
 previous <tt>rdf:rest</tt>. </p></p>
 <h3 id="a-namedel-lastadelete-the-element-at-the-end-of-a-list"><a name="del-last"></a>Delete the element at the end of a list</h3>
-<pre><code>PREFIX :     &amp;lt;http://example/&gt; 
-PREFIX rdf:  &amp;lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+<pre><code>PREFIX :     &lt;http://example/&gt; 
+PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 
 INSERT DATA {
   :x3 :p (1 2 3) .
@@ -244,8 +244,8 @@ elements including the <tt>?list</tt> case of zero steps - then the structure
 beyond that is tested for being the end.  There are 2 <tt>rdf:rest</tt> uses in
 the test for the end, hence list of length 2 or more.</p>
 <h3 id="a-namedel-all-1adelete-the-whole-list-common-case"><a name="del-all-1"></a>Delete the whole list (common case)</h3>
-<pre><code>PREFIX rdf:  &amp;lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
-PREFIX :     &amp;lt;http://example/&gt; 
+<pre><code>PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX :     &lt;http://example/&gt; 
 
 INSERT DATA {
     :x0 :p () .
@@ -278,8 +278,8 @@ to keep.</p>
 <tt>DELETE</tt> removes the triple with <tt>:p</tt> connecting the list to the
 subject.</p>
 <h3 id="a-namedel-all-2adelete-the-whole-list-general-case"><a name="del-all-2"></a>Delete the whole list (general case)</h3>
-<pre><code>PREFIX rdf:  &amp;lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
-PREFIX :     &amp;lt;http://example/&gt; 
+<pre><code>PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX :     &lt;http://example/&gt; 
 
 INSERT DATA {
     :x0 :p () .

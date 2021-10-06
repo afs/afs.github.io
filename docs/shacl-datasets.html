@@ -61,7 +61,7 @@ is assumed in the definitions.</p>
 <p><code>shx:targetGraph</code> defines graphs to apply a shape to.
 The property can be repeated.</p>
 <p>Example: a shape that is scoped to data graph <code>data:namedGraph1</code>:</p>
-<pre><code>:nodeShape0
+<pre tabindex="0"><code>:nodeShape0
     shx:targetGraph data:namedGraph1 ;
     sh:targetObjectsOf ns:q ;
     sh:datatype xsd:integer ;
@@ -97,14 +97,14 @@ applies to each of the graphs as the data graph.</p>
 <p>The subject of the <code>shx:targetGraph</code> triple defines the scope - it can be a
 specific shape, a named graph of the shapes dataset or the whole shapes
 dataset (when the subject is the URI of the shapes dataset).</p>
-<pre><code># Shapes Named graph
+<pre tabindex="0"><code># Shapes Named graph
 &lt;#gn1&gt; shx:targetGraph data:namedGraph1 .
 GRAPH &lt;#gn1&gt; {
     :nodeShape0
         sh:targetObjectsOf ns:q ;
         sh:datatype xsd:integer ;
 }
-</code></pre><pre><code># Shapes Dataset
+</code></pre><pre tabindex="0"><code># Shapes Dataset
 # All shapes in the shape dataset apply to all graphs in the data dataset.
 &lt;&gt; shx:targetGraph shx:all .
 
@@ -165,11 +165,11 @@ applied as the default rule for all shapes in that shapes graph. The shape graph
 graph name does not need to correspond to any graph in the data to be validated.</p>
 <p>The <code>shx:targetGraph</code> can be in the default graph of the shapes datset or in
 a named graph. These two examples achive the same effect.</p>
-<pre><code>&lt;#g&gt; shx:targetGraph data:graphName .
+<pre tabindex="0"><code>&lt;#g&gt; shx:targetGraph data:graphName .
 GRAPH &lt;#g&gt; {
    ... any shapes in graph &lt;#g&gt; will have the targetGraph scope above ...
 }
-</code></pre><pre><code>GRAPH &lt;#g&gt; {
+</code></pre><pre tabindex="0"><code>GRAPH &lt;#g&gt; {
    &lt;#g&gt; shx:targetGraph data:graphName .
    ... any shapes in graph &lt;#g&gt; will have the targetGraph scope above ...
 }
@@ -188,7 +188,7 @@ only applies to including graphs within the shapes dataset.</p>
 <h2 id="examples">Examples</h2>
 <p>Examples are written in <a href="https://www.w3.org/TR/trig/">TriG</a>.</p>
 <p>Assumed prefixes:</p>
-<pre><code>PREFIX rdf:     &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+<pre tabindex="0"><code>PREFIX rdf:     &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 PREFIX rdfs:    &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 PREFIX xsd:     &lt;http://www.w3.org/2001/XMLSchema#&gt;
 
@@ -200,7 +200,7 @@ PREFIX s:       &lt;http:/example/shapes/&gt;
 PREFIX ns       &lt;http:/example/ns#&gt;
 </code></pre><h3 id="examples-1">Examples</h3>
 <p>Apply all shapes to all graphs in the data.</p>
-<pre><code>&lt;&gt; shx:targetGraph shx:all .
+<pre tabindex="0"><code>&lt;&gt; shx:targetGraph shx:all .
 
 :nodeShape0
     shx:targetGraph data:namedGraph1 ;
@@ -209,7 +209,7 @@ PREFIX ns       &lt;http:/example/ns#&gt;
     .
 </code></pre><h3 id="example">Example</h3>
 <p>All shapes applied to a specific named graph.</p>
-<pre><code>&lt;&gt; shx:targetGraph data:namedGraph1 .
+<pre tabindex="0"><code>&lt;&gt; shx:targetGraph data:namedGraph1 .
 
 :nodeShape0
     sh:targetObjectsOf ns:q ;
@@ -222,7 +222,7 @@ PREFIX ns       &lt;http:/example/ns#&gt;
     .
 </code></pre><h3 id="example-1">Example</h3>
 <p>A collection of shapes for one graph.</p>
-<pre><code>GRAPH &lt;#g1&gt; {
+<pre tabindex="0"><code>GRAPH &lt;#g1&gt; {
      &lt;#g1&gt; shx:targetGraph data:namedGraph1 .
 
     :nodeShape0
@@ -235,14 +235,14 @@ PREFIX ns       &lt;http:/example/ns#&gt;
 }
 </code></pre><h3 id="example-2">Example</h3>
 <p>Apply to all graphs except <code>data:namedGraph1</code>.</p>
-<pre><code>&lt;&gt; shx:targetGraph data:all ;
+<pre tabindex="0"><code>&lt;&gt; shx:targetGraph data:all ;
    shx:targetGraphExclude data:namedGraph1 .
 </code></pre><h2 id="possible-additions">Possible additions</h2>
 <h3 id="graph-name-patterns">Graph name patterns</h3>
 <p>For targets, a regular expression to filter the data dataset graph names based
 on URIs:</p>
-<pre><code>[] shx:targetGraphPattern &quot;http://example/.*/shapes&quot; .
-</code></pre><pre><code>[] shx:targetGraphPattern (&quot;http://example/shapes/set-\\d{1,4}&quot; . &quot;i&quot;) .
+<pre tabindex="0"><code>[] shx:targetGraphPattern &quot;http://example/.*/shapes&quot; .
+</code></pre><pre tabindex="0"><code>[] shx:targetGraphPattern (&quot;http://example/shapes/set-\\d{1,4}&quot; . &quot;i&quot;) .
 </code></pre><p>Similarly <code>shx:targetGraphExcludePattern</code>.</p>
 <h3 id="dataset-level-constraints">Dataset-level constraints</h3>
 <p>Constraints on graphs and graph names (e.g. URI pattern of gah names).</p>

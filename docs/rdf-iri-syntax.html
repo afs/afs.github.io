@@ -92,7 +92,7 @@ defines &ldquo;URI&rdquo;.</p>
 <p>The relevant part of the grammar in
 <a href="https://tools.ietf.org/html/rfc3986#appendix-A">RFC3986 appendix-A</a>
 is:</p>
-<pre><code>   absolute-URI  = scheme &quot;:&quot; hier-part [ &quot;?&quot; query ]
+<pre tabindex="0"><code>   absolute-URI  = scheme &quot;:&quot; hier-part [ &quot;?&quot; query ]
 
    URI           = scheme &quot;:&quot; hier-part [ &quot;?&quot; query ] [ &quot;#&quot; fragment ]
 
@@ -126,7 +126,7 @@ against the base.</p>
 references should have been converted.</p>
 <h3 id="example">Example</h3>
 <p>By the definitions in RFC 3986:</p>
-<pre><code>    http:abcd
+<pre tabindex="0"><code>    http:abcd
     http:/abcd
 </code></pre><p>are absolute URIs - it has a URI scheme, it does not have a fragment.</p>
 <p>But it is not an &ldquo;<a href="#http">http-URI</a>&rdquo; which is defined in
@@ -153,14 +153,14 @@ must be legal hex digits (<code>%ST</code> is a syntax error).
 Normalization prefers the letters &ldquo;A-F&rdquo; to be uppercase.</p>
 <h2 id="http">HTTP</h2>
 <p><a href="https://tools.ietf.org/html/rfc7230#section-2.7.1">RFC7230 sec 2.7.1</a></p>
-<pre><code>  http-URI = &quot;http:&quot; &quot;//&quot; authority path-abempty [ &quot;?&quot; query ] [ &quot;#&quot; fragment ]
+<pre tabindex="0"><code>  http-URI = &quot;http:&quot; &quot;//&quot; authority path-abempty [ &quot;?&quot; query ] [ &quot;#&quot; fragment ]
 </code></pre><p>so the http URI scheme adds a requirement that there must be a &ldquo;//&rdquo; and
 authority (host and port), followed by an absolute path (starts with &ldquo;/&quot;) or is
 absent (empty string, no &ldquo;/&quot;).</p>
 <h2 id="urn">URN</h2>
 <p>The
 <a href="https://tools.ietf.org/html/rfc8141#section-2">syntax of the urn URI scheme</a></p>
-<pre><code>      assigned-name = &quot;urn&quot; &quot;:&quot; NID &quot;:&quot; NSS
+<pre tabindex="0"><code>      assigned-name = &quot;urn&quot; &quot;:&quot; NID &quot;:&quot; NSS
       NID           = (alphanum) 0*30(ldh) (alphanum)
       ldh           = alphanum / &quot;-&quot;
       NSS           = pchar *(pchar / &quot;/&quot;)
@@ -233,11 +233,11 @@ scheme.</p>
 </ul>
 <h2 id="gotchas">Gotchas</h2>
 <p>In Turtle related synatxes, there are two places where &ldquo;partial URIs&rdquo; are used.</p>
-<pre><code>PREFIX u: &lt;urn:uuid:&gt;
+<pre tabindex="0"><code>PREFIX u: &lt;urn:uuid:&gt;
 
 u:66d5b9e2-5abe-49be-bfc9-1ed0d997e07f
 </code></pre><p>but <code>urn:uuid:</code> is not a legal URN.</p>
-<pre><code>BASE &lt;urn:&gt;
+<pre tabindex="0"><code>BASE &lt;urn:&gt;
 
 ## Resolves to urn:uuid:66d5...
 &lt;uuid:66d5b9e2-5abe-49be-bfc9-1ed0d997e07f&gt;
