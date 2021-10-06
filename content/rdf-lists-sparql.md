@@ -84,8 +84,8 @@ and tidying up.  The graph updated is also being used as a scratch pad.
 
 ## <a name="add-first"></a>Add an element to the start of a list
 
-    PREFIX :    &lt;http://example/> 
-    PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    PREFIX :    <http://example/> 
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
     
     INSERT DATA {
       :x0 :p () .
@@ -105,8 +105,8 @@ This one is relatively easy. Find the list start <tt>?x :p ?list</tt>, which wor
 
 ### <a name="add-last"></a>Add an element to the end of a list
 
-    PREFIX :    &lt;http://example/> 
-    PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    PREFIX :    <http://example/> 
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
     
     INSERT DATA {
       :x0 :p () .
@@ -156,8 +156,8 @@ delete-insert to attach the cons cell is different.
 
 ### <a name="del-first"></a>Delete the element at the start of a list
 
-    PREFIX :      &lt;http://example/> 
-    PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    PREFIX :      <http://example/> 
+    PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
     
     INSERT DATA {
       :x3 :p (1 2 3) .
@@ -186,8 +186,8 @@ previous <tt>rdf:rest</tt>. </p>
 
 ### <a name="del-last"></a>Delete the element at the end of a list
 
-    PREFIX :     &lt;http://example/> 
-    PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    PREFIX :     <http://example/> 
+    PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
     
     INSERT DATA {
       :x3 :p (1 2 3) .
@@ -243,8 +243,8 @@ the test for the end, hence list of length 2 or more.
 
 ### <a name="del-all-1"></a>Delete the whole list (common case)
 
-    PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-    PREFIX :     &lt;http://example/> 
+    PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    PREFIX :     <http://example/> 
     
     INSERT DATA {
         :x0 :p () .
@@ -280,8 +280,8 @@ subject.
 
 ### <a name="del-all-2"></a>Delete the whole list (general case)
 
-    PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-    PREFIX :     &lt;http://example/> 
+    PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+    PREFIX :     <http://example/> 
     
     INSERT DATA {
         :x0 :p () .
