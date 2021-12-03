@@ -15,7 +15,7 @@ mapping. The operation is used to in the evaluation of <tt>EXISTS</tt> and
 
 
 This document list problems that have been identified with the
-<tt>substitute</tt> operation and proposes an improved substitution evalaution
+<tt>substitute</tt> operation and proposes an improved substitution evaluation
 process that addresses these problems based on the concept of 
 [Correlated Subquery](https://en.wikipedia.org/wiki/Correlated_subquery) found in SQL.
 
