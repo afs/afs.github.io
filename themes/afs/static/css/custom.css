@@ -10,6 +10,8 @@ body { font-family: "Muli", "Open Sans", sans-serif ;
        color:       #404040 ;
 }
 
+b { font-weight: 600 ; }
+
 /*
 body { font-family: "Roboto", sans-serif ; 
        font-size:   15px ;
@@ -35,6 +37,23 @@ h3 { font-size: 18px ; font-weight: bold ; }
 
 code { font-family: "Inconsolata" ; color: black ; background-color: #F0F0F0 ; }
 
+.defn {
+  margin-left :     5% ;
+  margin-right :    10% ;
+/*
+  background-color: #F8F8FF;
+*/
+  color:            black;
+  padding:          2mm;
+  page-break-inside: avoid ;
+ /*
+  border: 1px solid #ccc;
+*/
+  border-radius: 4px;
+}
+
+.defn-expr { font-family: "Inconsolata" ; margin-left: 2% ; }
+
 pre {
   font-family: "Inconsolata" ;
   background-color: #F0F0F0;
@@ -54,7 +73,6 @@ pre {
   margin-left :     5% ;
   margin-right :    5% ;
   line-height :     18px ;
-  border:           solid ;
   background-color: #F0F0F0;
   color:            black;
   padding:          2mm;

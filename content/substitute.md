@@ -211,9 +211,10 @@ when they are not in the output of the projection part of the inner SELECT expre
     SELECT * {
       ?s :value ?v .
       FILTER EXISTS {
-         {SELECT (count(*) AS ?C) {
-              ?s :property ?w .
-         }}
+         { SELECT (count(*) AS ?C) {
+               ?s :property ?w .
+           } 
+         }
          FILTER ( ?C < ?v )
       }
     }
@@ -225,9 +226,10 @@ Here, the <tt>?s</tt> is not mentioned in the projection in
     SELECT * {
       ?s :value ?v .
       FILTER EXISTS {
-         {SELECT (count(*) AS ?C) {
-                ?V1234 :property ?w .
-         }}
+         { SELECT (count(*) AS ?C) {
+                 ?V1234 :property ?w .
+           }
+         }
        FILTER ( ?C < ?v )
       }
     }
@@ -251,7 +253,7 @@ a partial mapping F from
 <a href="https://www.w3.org/TR/sparql11-query/#sparqlQueryVariables">V</a>,
 the set of all variables, to V where:
 </p>
-<p class="indent">
+<p class="defn-expr">
 F(v) = v if v in PV<br/>
 F(v) = v1 where v is a variable mentioned in the project expression
        and v1 is a fresh variable<br/>
@@ -271,7 +273,7 @@ This process is applied throughout the graph pattern of <tt>EXISTS</tt>:
 For any algebra expression X define the
 <dfn>Variable Remapping</dfn> PrjMap(X):
 </p>
-<p class="indent">
+<p class="defn-expr">
 PrjMap(X) = replace all project operations <tt>project(P PV)</tt> with <tt>project(PrjMap(P,PV) PV)</tt> for each projection in X.
 </p>
 This replacement is applied bottom-up when there are multiple project
@@ -334,7 +336,7 @@ property path or graph match.
 <p>
 For solution mapping μ, define Table(μ) to be the multiset formed from μ.
 </p>
-<p class="indent">
+<p class="defn-expr">
   Table(μ) = { μ }<br/>
   Card[μ] = 1
 </p>
@@ -358,7 +360,7 @@ The evaluation of <tt>EXISTS</tt> is defined as:
 Let μ be the current solution mapping for a filter and X a graph pattern,
 define the <dfn>Evaluation of Exists</dfn> <tt>exists(X)</tt>
 </p>
-<p class="indent">
+<p class="defn-expr">
   exists(X) = true if eval(D(G), Replace(PrjMap(X), μ) is a non-empty solution sequence.
   <br/>
   exists(X) = false otherwise
