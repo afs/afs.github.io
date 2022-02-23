@@ -9,7 +9,7 @@ title: SPARQL Grouping and Aggregation with no matches
 
 Grouping and Aggregation is the combination of `GROUP BY` and one of the
 aggregation functions such as `COUNT` or `MAX`.  When there are no matches to
-the `WHERE` clause, the spec and one of the original workign groups tests don't
+the `WHERE` clause, the spec and one of the original working groups tests don't
 agree. In the case of aggregation and no `GROUP BY`, the spec needs a fix to get
 the expected answer.
 
@@ -89,7 +89,7 @@ which is one row, with no values, not zero rows.
     |   |     |
     -----------
 
-(the original [test results]((https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group.srx)
+(the original [test results](https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group.srx)
 have no `<variable name="x"/>` - that's corrected in test manifest with [these results](https://www.w3.org/2009/sparql/docs/tests/data-sparql11/aggregates/agg-empty-group2.srx).)
 
 It should be:
