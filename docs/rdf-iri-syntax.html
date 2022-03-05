@@ -92,11 +92,11 @@ defines &ldquo;URI&rdquo;.</p>
 <p>The relevant part of the grammar in
 <a href="https://tools.ietf.org/html/rfc3986#appendix-A">RFC3986 appendix-A</a>
 is:</p>
-<pre tabindex="0"><code>   absolute-URI  = scheme &quot;:&quot; hier-part [ &quot;?&quot; query ]
+<pre tabindex="0"><code>   absolute-URI  = scheme &#34;:&#34; hier-part [ &#34;?&#34; query ]
 
-   URI           = scheme &quot;:&quot; hier-part [ &quot;?&quot; query ] [ &quot;#&quot; fragment ]
+   URI           = scheme &#34;:&#34; hier-part [ &#34;?&#34; query ] [ &#34;#&#34; fragment ]
 
-   hier-part     = &quot;//&quot; authority path-abempty
+   hier-part     = &#34;//&#34; authority path-abempty
                  / path-absolute
                  / path-rootless
                  / path-empty
@@ -153,17 +153,17 @@ must be legal hex digits (<code>%ST</code> is a syntax error).
 Normalization prefers the letters &ldquo;A-F&rdquo; to be uppercase.</p>
 <h2 id="http">HTTP</h2>
 <p><a href="https://tools.ietf.org/html/rfc7230#section-2.7.1">RFC7230 sec 2.7.1</a></p>
-<pre tabindex="0"><code>  http-URI = &quot;http:&quot; &quot;//&quot; authority path-abempty [ &quot;?&quot; query ] [ &quot;#&quot; fragment ]
+<pre tabindex="0"><code>  http-URI = &#34;http:&#34; &#34;//&#34; authority path-abempty [ &#34;?&#34; query ] [ &#34;#&#34; fragment ]
 </code></pre><p>so the http URI scheme adds a requirement that there must be a &ldquo;//&rdquo; and
-authority (host and port), followed by an absolute path (starts with &ldquo;/&quot;) or is
-absent (empty string, no &ldquo;/&quot;).</p>
+authority (host and port), followed by an absolute path (starts with &ldquo;/&rdquo;) or is
+absent (empty string, no &ldquo;/&rdquo;).</p>
 <h2 id="urn">URN</h2>
 <p>The
 <a href="https://tools.ietf.org/html/rfc8141#section-2">syntax of the urn URI scheme</a></p>
-<pre tabindex="0"><code>      assigned-name = &quot;urn&quot; &quot;:&quot; NID &quot;:&quot; NSS
+<pre tabindex="0"><code>      assigned-name = &#34;urn&#34; &#34;:&#34; NID &#34;:&#34; NSS
       NID           = (alphanum) 0*30(ldh) (alphanum)
-      ldh           = alphanum / &quot;-&quot;
-      NSS           = pchar *(pchar / &quot;/&quot;)
+      ldh           = alphanum / &#34;-&#34;
+      NSS           = pchar *(pchar / &#34;/&#34;)
 </code></pre><p>The older <a href="https://tools.ietf.org/html/rfc2141">RFC 2141</a> allowed &ldquo;X-&hellip;&rdquo; as NID.</p>
 <p>While a URN allows <code>r-component</code>, <code>q-component</code> and <code>f-component</code>, the latter
 being a URI fragment, usually it is just the <code>assigned-name</code> form used for
@@ -192,7 +192,7 @@ filenames (relative to their point of use), for example
 <code>file:directory/file.txt</code>, can be used.</p>
 <p>While for RDF the file schema is of limited use, the file URI scheme is useful
 when working with local files, for example using RDF for configuration files on the
-local machine. Such URIs will be of the form <code>file:///</code> (that is, 3 &lsquo;/') using
+local machine. Such URIs will be of the form <code>file:///</code> (that is, 3 &lsquo;/&rsquo;) using
 the file scheme convention that &ldquo;localhost&rdquo; can be dropped.</p>
 <h2 id="rdf-references">RDF References</h2>
 <p>It woudl be useful to pull all these considerations together into a distinct
