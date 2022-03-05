@@ -125,7 +125,7 @@ This one is relatively easy. Find the list start <tt>?x :p ?list</tt>, which wor
     {
       ?x :p ?list .
       # List of length >= 1
-      ?list rdf:rest+ ?elt .
+      ?list rdf:rest* ?elt .
       ?elt rdf:rest rdf:nil .
       # ?elt is last cons cell
     } ;
