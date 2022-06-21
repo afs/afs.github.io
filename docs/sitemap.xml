@@ -2,6 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://afs.github.io/rdf-patch/readme.html</loc>
+  </url><url>
     <loc>https://afs.github.io/</loc>
   </url><url>
     <loc>https://afs.github.io/rdf-thrift/jena-rdf-thrift-api.html</loc>
@@ -15,6 +17,8 @@
     <loc>https://afs.github.io/rdf-thrift/rdf-binary-thrift.html</loc>
   </url><url>
     <loc>https://afs.github.io/rdf-thrift/</loc>
+  </url><url>
+    <loc>https://afs.github.io/rdf-patch.html</loc>
   </url><url>
     <loc>https://afs.github.io/rdf-thrift.html</loc>
   </url><url>
