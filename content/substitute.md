@@ -189,7 +189,7 @@ definition of <tt>substitute</tt> addresses each of the issues identified above.
       
 There are 3 parts to the proposal:
 
-* Place the current row of mapping variables to value (the RDF terms) so that
+* Place the current row mapping variables to values (the RDF terms) so that
   the variables always have their values from the current row.
   This is the replacement for syntactic substitution in the original definition.
 * Renaming inner scope variables so that variables that are only used within a
