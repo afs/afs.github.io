@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -18,7 +18,9 @@
     	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
 	    crossorigin="anonymous"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
     <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" type="text/css" href="/css/custom.css">
@@ -132,50 +134,50 @@ is the XSD canonical form).</p>
 <code>xsd:byte</code> are encoded as their integer value and will become <code>xsd:integer</code>
 when read back in.</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:left">Input Datatype</th>
-<th style="text-align:left">Value space</th>
-<th style="text-align:left">Outcome Datatype</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><tt>xsd:integer</tt></td>
-<td style="text-align:left">Integer</td>
-<td style="text-align:left"><tt>xsd:integer</tt></td>
-</tr>
-<tr>
-<td style="text-align:left"><tt>xsd:long</tt></td>
-<td style="text-align:left">Integer</td>
-<td style="text-align:left"><tt>xsd:integer</tt></td>
-</tr>
-<tr>
-<td style="text-align:left"><tt>xsd:int</tt></td>
-<td style="text-align:left">Integer</td>
-<td style="text-align:left"><tt>xsd:integer</tt></td>
-</tr>
-<tr>
-<td style="text-align:left"><tt>xsd:short</tt></td>
-<td style="text-align:left">Integer</td>
-<td style="text-align:left"><tt>xsd:integer</tt></td>
-</tr>
-<tr>
-<td style="text-align:left"><tt>xsd:byte</tt></td>
-<td style="text-align:left">Integer</td>
-<td style="text-align:left"><tt>xsd:integer</tt></td>
-</tr>
-<tr>
-<td style="text-align:left"><tt>xsd:decimal</tt></td>
-<td style="text-align:left">Decimal</td>
-<td style="text-align:left"><tt>xsd:decimal</tt></td>
-</tr>
-<tr>
-<td style="text-align:left"><tt>xsd:double</tt></td>
-<td style="text-align:left">Double</td>
-<td style="text-align:left"><tt>xsd:double</tt></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: left">Input Datatype</th>
+          <th style="text-align: left">Value space</th>
+          <th style="text-align: left">Outcome Datatype</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><tt>xsd:integer</tt></td>
+          <td style="text-align: left">Integer</td>
+          <td style="text-align: left"><tt>xsd:integer</tt></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><tt>xsd:long</tt></td>
+          <td style="text-align: left">Integer</td>
+          <td style="text-align: left"><tt>xsd:integer</tt></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><tt>xsd:int</tt></td>
+          <td style="text-align: left">Integer</td>
+          <td style="text-align: left"><tt>xsd:integer</tt></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><tt>xsd:short</tt></td>
+          <td style="text-align: left">Integer</td>
+          <td style="text-align: left"><tt>xsd:integer</tt></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><tt>xsd:byte</tt></td>
+          <td style="text-align: left">Integer</td>
+          <td style="text-align: left"><tt>xsd:integer</tt></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><tt>xsd:decimal</tt></td>
+          <td style="text-align: left">Decimal</td>
+          <td style="text-align: left"><tt>xsd:decimal</tt></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><tt>xsd:double</tt></td>
+          <td style="text-align: left">Double</td>
+          <td style="text-align: left"><tt>xsd:double</tt></td>
+      </tr>
+  </tbody>
 </table>
 <p>Whether this matters, depends on the data.  For use as a failthful, general
 purpose database dump format, value encoding should not be used.</p>

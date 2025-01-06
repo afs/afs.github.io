@@ -1,18 +1,25 @@
 == See ~/Fonts ==
 
 Loaded in themes/afs/layouts/partials/head.html
+Setup, including weight, in themes/afs/static/css/custom.css
 
-Chooses in css/custom.css
+Choices, Open+Sans, Muli, Nunito
+Open+Sans: 15px
+Muli: 15 or 16
+Nunito: 16px
 
-//fonts.googleapis.com/css?family=Open+Sans:300,400,600,300italic,400italic
-//fonts.googleapis.com/css?family=Roboto:300,500,300italic,500italic
-
-<link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 
 //fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
 
 Lesser
 
+(2025)
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+
+Also:
 <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
 <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 

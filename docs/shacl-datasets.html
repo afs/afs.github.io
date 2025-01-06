@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -18,7 +18,9 @@
     	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
 	    crossorigin="anonymous"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
     <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" type="text/css" href="/css/custom.css">
@@ -69,30 +71,30 @@ The property can be repeated.</p>
 </code></pre><p>Certain URIs define a collection of graphs in the target dataset. The shape
 applies to each of the graphs as the data graph.</p>
 <table>
-<thead>
-<tr>
-<th>URI</th>
-<th>Graphs</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>shx:all</code></td>
-<td>All the graphs (named and default) of the data dataset.</td>
-</tr>
-<tr>
-<td><code>shx:named</code></td>
-<td>All the named graphs of the data dataset.</td>
-</tr>
-<tr>
-<td><code>shx:default</code></td>
-<td>The default graph of the data dataset.</td>
-</tr>
-<tr>
-<td><code>shx:union</code></td>
-<td>The union graph formed from all named graphs of the data dataset.</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>URI</th>
+          <th>Graphs</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>shx:all</code></td>
+          <td>All the graphs (named and default) of the data dataset.</td>
+      </tr>
+      <tr>
+          <td><code>shx:named</code></td>
+          <td>All the named graphs of the data dataset.</td>
+      </tr>
+      <tr>
+          <td><code>shx:default</code></td>
+          <td>The default graph of the data dataset.</td>
+      </tr>
+      <tr>
+          <td><code>shx:union</code></td>
+          <td>The union graph formed from all named graphs of the data dataset.</td>
+      </tr>
+  </tbody>
 </table>
 <p>The subject of the <code>shx:targetGraph</code> triple defines the scope - it can be a
 specific shape, a named graph of the shapes dataset or the whole shapes
@@ -121,22 +123,22 @@ validating suceeds.</p>
 This target condition is applied after calculating the included target graphs
 for a shape.</p>
 <table>
-<thead>
-<tr>
-<th>URI</th>
-<th>Definition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>shx:targetGraph</code></td>
-<td>Property identifying a data graph to target</td>
-</tr>
-<tr>
-<td><code>shx:targetGraphExclude</code></td>
-<td>Property identifying a data graph to exclude as a target</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>URI</th>
+          <th>Definition</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>shx:targetGraph</code></td>
+          <td>Property identifying a data graph to target</td>
+      </tr>
+      <tr>
+          <td><code>shx:targetGraphExclude</code></td>
+          <td>Property identifying a data graph to exclude as a target</td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="validation-reports">Validation Reports</h2>
 <p>Each validation result in a validation report should have a <code>shx:resultGraph</code>
@@ -145,18 +147,18 @@ the shape&rsquo;s <code>shx:targetGraph</code> if that is given, the graph name 
 <code>shx:targetGraphPattern</code> or the specific named graph of the data dataset in
 the case of <code>shx:named</code> or <code>shx:all</code>.</p>
 <table>
-<thead>
-<tr>
-<th>URI</th>
-<th>Definition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>shx:resultGraph</code></td>
-<td>Data graph that caused the validation result</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>URI</th>
+          <th>Definition</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>shx:resultGraph</code></td>
+          <td>Data graph that caused the validation result</td>
+      </tr>
+  </tbody>
 </table>
 <h2 id="grouping-shapes">Grouping Shapes</h2>
 <p>The graphs of the shapes dataset can be used to group shapes. If a

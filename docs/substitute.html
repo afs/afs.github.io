@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -18,7 +18,10 @@
     	    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
 	    crossorigin="anonymous"></script>
 
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Muli&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+
     <link href='//fonts.googleapis.com/css?family=Inconsolata:400' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" type="text/css" href="/css/custom.css">
@@ -76,7 +79,7 @@ SPARQL Exists Community group mailing list
 <p>The evaluation process in the specificiation is defined for graph patterns but
 there are situations where the evaluation is of an alegbra form not listed.</p>
 <p>For example:</p>
-<pre><code>FILTER EXISTS { SELECT ?y { ?y :q :c } }
+<pre><code>FILTER EXISTS { SELECT ?y { ?y :q :c . } }
 </code></pre>
 <p>and</p>
 <pre><code>FILTER EXISTS { VALUES ?y { 123 } }
@@ -132,9 +135,9 @@ as RDF terms. They are not mapped by an RDF instance mapping.</p>
     FILTER EXISTS { ?x :q :b . }
 }
 </code></pre>
-<p>against the graph <tt>{ :c :p :d . :e :q :b }</tt>
+<p>against the graph <tt>{ <em>:c :p :d , :e :q :b }</tt>
 the substitution for <tt>EXISTS</tt> produces
-<tt>BGP(:c :q :b)</tt> which then
+<tt>BGP(</em>:c :q :b)</tt> which then
 matches against <tt>:e :q :b</tt> because the <tt>_:c</tt> can be mapped to <tt>:e</tt> by
 the RDF instance mapping that is part of pattern instance mappings in
 <a href="https://www.w3.org/TR/sparql11-query/#BGPsparql">18.3.1</a>.</p>
