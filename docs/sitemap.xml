@@ -2,30 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/rdf-patch.html</loc>
+    <loc>https://afs.github.io/rdf-patch.html</loc>
   </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://afs.github.io/index.html</loc>
   </url><url>
-    <loc>http://localhost:1313/rdf-thrift/jena-rdf-thrift-api.html</loc>
+    <loc>https://afs.github.io/rdf-thrift/jena-rdf-thrift-api.html</loc>
   </url><url>
-    <loc>http://localhost:1313/categories.html</loc>
+    <loc>https://afs.github.io/categories/index.html</loc>
   </url><url>
-    <loc>http://localhost:1313/shacl-datasets.html</loc>
+    <loc>https://afs.github.io/shacl-datasets.html</loc>
   </url><url>
-    <loc>http://localhost:1313/rdf-iri-syntax.html</loc>
+    <loc>https://afs.github.io/rdf-iri-syntax.html</loc>
   </url><url>
-    <loc>http://localhost:1313/rdf-thrift/rdf-binary-thrift.html</loc>
+    <loc>https://afs.github.io/rdf-thrift/rdf-binary-thrift.html</loc>
   </url><url>
-    <loc>http://localhost:1313/rdf-thrift/</loc>
+    <loc>https://afs.github.io/rdf-thrift/</loc>
   </url><url>
-    <loc>http://localhost:1313/rdf-thrift.html</loc>
+    <loc>https://afs.github.io/rdf-thrift/index.html</loc>
   </url><url>
-    <loc>http://localhost:1313/sparql-agg-group-empty.html</loc>
+    <loc>https://afs.github.io/sparql-agg-group-empty.html</loc>
   </url><url>
-    <loc>http://localhost:1313/substitute.html</loc>
+    <loc>https://afs.github.io/substitute.html</loc>
   </url><url>
-    <loc>http://localhost:1313/tags.html</loc>
+    <loc>https://afs.github.io/tags/index.html</loc>
   </url><url>
-    <loc>http://localhost:1313/rdf-lists-sparql.html</loc>
+    <loc>https://afs.github.io/rdf-lists-sparql.html</loc>
   </url>
 </urlset>
